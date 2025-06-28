@@ -11,7 +11,7 @@ const PublicHeader: React.FC = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
-  const buttonRef = useRef<HTMLButtonElement>(null);
+  const userButtonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { success } = useToast();
@@ -19,9 +19,9 @@ const PublicHeader: React.FC = () => {
   // Close menus when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (userMenuRef.current && buttonRef.current && 
+      if (userMenuRef.current && userButtonRef.current && 
           !userMenuRef.current.contains(event.target as Node) && 
-          !buttonRef.current.contains(event.target as Node)) {
+          !userButtonRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
       }
     };
@@ -40,7 +40,9 @@ const PublicHeader: React.FC = () => {
     console.log('PublicHeader - Auth state:', { isAuthenticated, userRole: currentUser?.role });
   }, [isAuthenticated, currentUser]);
 
-  const handleLogout = () => {
+  const handleLogout = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     console.log('Logging out user');
     setCurrentUser(null);
     setAuthenticated(false);
@@ -49,8 +51,9 @@ const PublicHeader: React.FC = () => {
     setShowUserMenu(false);
   };
 
-  const handleDashboardClick = (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleDashboardClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     
     if (currentUser?.role === 'creator') {
       console.log('Navigating to creator dashboard');
@@ -64,8 +67,9 @@ const PublicHeader: React.FC = () => {
     setShowMobileMenu(false);
   };
 
-  const handleProfileClick = (event: React.MouseEvent) => {
-    event.preventDefault();
+  const handleProfileClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     
     if (currentUser?.role === 'creator') {
       console.log('Navigating to creator profile settings');
@@ -140,8 +144,11 @@ const PublicHeader: React.FC = () => {
             {isAuthenticated && currentUser ? (
               <div className="relative">
                 <button
-                  ref={buttonRef}
-                  onClick={() => setShowUserMenu(!showUserMenu)}
+                  ref={userButtonRef}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setShowUserMenu(!showUserMenu);
+                  }}
                   className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200"
                 >
                   <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary text-xs font-bold border-2 border-primary-200 dark:border-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
@@ -228,7 +235,10 @@ const PublicHeader: React.FC = () => {
             {/* User button for mobile */}
             {isAuthenticated && currentUser && (
               <button
-                onClick={() => setShowUserMenu(!showUserMenu)}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowUserMenu(!showUserMenu);
+                }}
                 className="flex items-center justify-center w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary dark:text-primary-400 border-2 border-primary-200 dark:border-primary-700/50"
               >
                 {currentUser.name.substring(0, 2).toUpperCase()}

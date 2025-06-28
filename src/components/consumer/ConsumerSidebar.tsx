@@ -33,7 +33,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
 
   const handleLogout = () => {
     // Log the action
-    console.log('🔄 Consumer logout triggered');
+    console.log('🔄 Consumer logout triggered from sidebar');
     
     // Clear authentication state
     setCurrentUser(null);
@@ -43,8 +43,14 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
     success('Successfully logged out');
     
     // Navigate to main landing page
-    console.log('🔄 Navigating to / after logout');
     navigate('/');
+  };
+  
+  const handleLinkClick = (path: string) => {
+    // For mobile views, close the sidebar when a link is clicked
+    if (window.innerWidth < 768) {
+      onToggle();
+    }
   };
 
   return (
@@ -133,6 +139,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
                       }
                     `}
                     end={item.path === '/consumer'}
+                    onClick={() => handleLinkClick(item.path)}
                   >
                     <span className="mr-3">{item.icon}</span>
                     {item.label}

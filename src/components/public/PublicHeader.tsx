@@ -37,7 +37,7 @@ const PublicHeader: React.FC = () => {
 
   // Log state for debugging
   useEffect(() => {
-    console.log('PublicHeader - Auth state:', { isAuthenticated, currentUser });
+    console.log('PublicHeader - Auth state:', { isAuthenticated, userRole: currentUser?.role });
   }, [isAuthenticated, currentUser]);
 
   const handleLogout = () => {
@@ -49,12 +49,32 @@ const PublicHeader: React.FC = () => {
     setShowUserMenu(false);
   };
 
-  const handleDashboardClick = () => {
+  const handleDashboardClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    
     if (currentUser?.role === 'creator') {
+      console.log('Navigating to creator dashboard');
       navigate('/dashboard');
     } else if (currentUser?.role === 'audience') {
+      console.log('Navigating to consumer dashboard');
       navigate('/consumer');
     }
+    
+    setShowUserMenu(false);
+    setShowMobileMenu(false);
+  };
+
+  const handleProfileClick = (event: React.MouseEvent) => {
+    event.preventDefault();
+    
+    if (currentUser?.role === 'creator') {
+      console.log('Navigating to creator profile settings');
+      navigate('/dashboard/settings');
+    } else if (currentUser?.role === 'audience') {
+      console.log('Navigating to consumer profile settings');
+      navigate('/consumer/settings');
+    }
+    
     setShowUserMenu(false);
     setShowMobileMenu(false);
   };
@@ -150,10 +170,7 @@ const PublicHeader: React.FC = () => {
                         Dashboard
                       </button>
                       <button 
-                        onClick={() => {
-                          navigate(`/${currentUser.role === 'creator' ? 'dashboard' : 'consumer'}/settings`);
-                          setShowUserMenu(false);
-                        }}
+                        onClick={handleProfileClick}
                         className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                       >
                         <User size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
@@ -260,6 +277,13 @@ const PublicHeader: React.FC = () => {
                   Dashboard
                 </button>
                 <button 
+                  onClick={handleProfileClick}
+                  className="w-full text-left flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md"
+                >
+                  <User size={16} className="mr-2 text-gray-500 dark:text-gray-400" />
+                  Profile
+                </button>
+                <button 
                   onClick={handleLogout}
                   className="w-full text-left flex items-center text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 px-3 py-2 rounded-md"
                 >
@@ -291,10 +315,7 @@ const PublicHeader: React.FC = () => {
               Dashboard
             </button>
             <button 
-              onClick={() => {
-                navigate(`/${currentUser?.role === 'creator' ? 'dashboard' : 'consumer'}/settings`);
-                setShowUserMenu(false);
-              }}
+              onClick={handleProfileClick}
               className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <User size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />

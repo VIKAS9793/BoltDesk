@@ -33,10 +33,28 @@ export const TopBar: React.FC = () => {
   const { success } = useToast();
 
   const handleLogout = () => {
+    // Log the action for debugging
+    console.log('Creator dashboard logout triggered');
+    
+    // Clear the authentication state
     setCurrentUser(null);
     setAuthenticated(false);
+    
+    // Show success message
     success('Successfully logged out');
+    
+    // Navigate to the home page
     navigate('/');
+  };
+  
+  const handleProfileClick = () => {
+    navigate('/dashboard/settings/profile');
+    setShowUserMenu(false);
+  };
+  
+  const handleSettingsClick = () => {
+    navigate('/dashboard/settings');
+    setShowUserMenu(false);
   };
 
   return (
@@ -142,14 +160,20 @@ export const TopBar: React.FC = () => {
                   <p className="text-xs text-gray-500 dark:text-gray-400">{currentUser?.email}</p>
                 </div>
                 <div className="py-1 mt-1">
-                  <button className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center">
+                  <button 
+                    className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center"
+                    onClick={handleProfileClick}
+                  >
                     <User className="mr-2 h-4 w-4 text-gray-500" />
                     Profile
                   </button>
-                  <Link to="/dashboard/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center block">
+                  <button
+                    className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center"
+                    onClick={handleSettingsClick}
+                  >
                     <Settings className="mr-2 h-4 w-4 text-gray-500" />
                     Settings
-                  </Link>
+                  </button>
                   <button 
                     className="text-left w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md flex items-center"
                     onClick={handleLogout}

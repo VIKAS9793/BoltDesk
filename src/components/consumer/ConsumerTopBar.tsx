@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAppStore } from '../../store';
 import { Button } from '../ui/Button';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,7 +12,9 @@ import {
   User,
   Settings,
   LogOut,
-  ChevronDown
+  ChevronDown,
+  BookOpen,
+  Heart
 } from 'lucide-react';
 import { useToast } from '../../hooks/useToast';
 
@@ -27,14 +29,43 @@ export const ConsumerTopBar: React.FC = () => {
     setCurrentUser
   } = useAppStore();
   const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
+  const buttonRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
-  const { success } = useToast();
+  const { success, info } = useToast();
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && buttonRef.current && 
+          !userMenuRef.current.contains(event.target as Node) && 
+          !buttonRef.current.contains(event.target as Node)) {
+        setShowUserMenu(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Log state for debugging
+  useEffect(() => {
+    console.log('ConsumerTopBar - Auth state:', { isAuthenticated: !!currentUser, userRole: currentUser?.role });
+  }, [currentUser]);
 
   const handleLogout = () => {
+    console.log('Consumer logout triggered');
     setCurrentUser(null);
     setAuthenticated(false);
     success('Successfully logged out');
     navigate('/');
+    setShowUserMenu(false);
+  };
+
+  const handleNavigate = (path: string, label: string) => {
+    navigate(path);
+    setShowUserMenu(false);
+    info(`Navigating to ${label}`);
   };
 
   return (
@@ -103,10 +134,10 @@ export const ConsumerTopBar: React.FC = () => {
         
         {/* User menu */}
         <div className="relative">
-          <Button
-            variant="ghost"
-            className="flex items-center gap-2 h-9 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 shadow-sm"
+          <button
+            ref={buttonRef}
             onClick={() => setShowUserMenu(!showUserMenu)}
+            className="flex items-center gap-2 h-9 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 shadow-sm text-gray-800 dark:text-gray-200"
           >
             <div className="h-7 w-7 rounded-full overflow-hidden bg-secondary-100 dark:bg-secondary-900/30 border border-secondary-200 dark:border-secondary-700/50 text-secondary flex items-center justify-center">
               {currentUser?.avatar ? (
@@ -117,39 +148,61 @@ export const ConsumerTopBar: React.FC = () => {
                 />
               ) : (
                 <span className="text-xs font-medium">
-                  {currentUser?.name.substring(0, 2).toUpperCase() || 'VI'}
+                  {currentUser?.name?.substring(0, 2).toUpperCase() || 'VI'}
                 </span>
               )}
             </div>
-            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">{currentUser?.name?.split(' ')[0] || 'User'}</span>
-            <ChevronDown size={16} className={`text-gray-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
-          </Button>
+            <span className="text-sm font-medium hidden sm:block">{currentUser?.name?.split(' ')[0] || 'User'}</span>
+            <ChevronDown size={16} className={`transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
+          </button>
           
           {/* User dropdown menu */}
           {showUserMenu && (
-            <div className="absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 z-50 border border-gray-200 dark:border-gray-700">
-              <div className="p-2">
-                <div className="px-4 py-2 border-b border-gray-200 dark:border-gray-700">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white">{currentUser?.name}</p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">{currentUser?.email}</p>
-                </div>
-                <div className="py-1 mt-1">
-                  <Link to="/consumer/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center block">
-                    <User className="mr-2 h-4 w-4 text-gray-500" />
-                    Profile
-                  </Link>
-                  <Link to="/consumer/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center block">
-                    <Settings className="mr-2 h-4 w-4 text-gray-500" />
-                    Settings
-                  </Link>
-                  <button 
-                    className="text-left w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-md flex items-center"
-                    onClick={handleLogout}
-                  >
-                    <LogOut className="mr-2 h-4 w-4 text-red-500" />
-                    Log out
-                  </button>
-                </div>
+            <div 
+              ref={userMenuRef}
+              className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700"
+            >
+              <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+                <p className="font-medium text-gray-900 dark:text-white text-sm">{currentUser?.name}</p>
+                <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{currentUser?.email}</p>
+              </div>
+              <div className="py-1">
+                <button 
+                  onClick={() => handleNavigate('/consumer', 'Dashboard')}
+                  className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Home size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
+                  Dashboard
+                </button>
+                <button 
+                  onClick={() => handleNavigate('/consumer/library', 'Content Library')}
+                  className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <BookOpen size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
+                  Content Library
+                </button>
+                <button 
+                  onClick={() => handleNavigate('/consumer/favorites', 'Favorites')}
+                  className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Heart size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
+                  Favorites
+                </button>
+                <button 
+                  onClick={() => handleNavigate('/consumer/settings', 'Settings')}
+                  className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+                >
+                  <Settings size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
+                  Settings
+                </button>
+                <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+                <button 
+                  onClick={handleLogout}
+                  className="flex w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+                >
+                  <LogOut size={16} className="inline mr-2 text-red-500" />
+                  Logout
+                </button>
               </div>
             </div>
           )}

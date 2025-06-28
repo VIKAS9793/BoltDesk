@@ -28,6 +28,7 @@ import DashboardAnalytics from '../../components/analytics/DashboardAnalytics';
 import MonetizationPanel from '../../components/monetization/MonetizationPanel';
 import CreatorPortalPreview from '../../components/preview/CreatorPortalPreview';
 import SetupWizardPortal from '../../components/wizard/SetupWizardPortal';
+import { useToast } from '../../hooks/useToast';
 
 const container = {
   hidden: { opacity: 0 },
@@ -45,12 +46,43 @@ const item = {
 };
 
 export const DashboardPage: React.FC = () => {
-  const { currentUser } = useAppStore();
+  const { currentUser, setCurrentUser } = useAppStore();
   const creator = currentUser as any;
   const today = formatDate(new Date());
+  const { success, info } = useToast();
   
   const [currentPanel, setCurrentPanel] = useState<'overview' | 'analytics' | 'monetization' | 'preview'>('overview');
   const [showWizard, setShowWizard] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(false);
+  
+  // Check if this is the first visit to show wizard automatically
+  useEffect(() => {
+    if (creator && !creator.onboardingCompleted) {
+      // Set a small delay to ensure everything is loaded
+      const timer = setTimeout(() => {
+        setIsFirstVisit(true);
+        setShowWizard(true);
+      }, 1000);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [creator]);
+  
+  // Mark onboarding as completed when wizard is closed
+  const handleWizardClose = () => {
+    setShowWizard(false);
+    
+    // Only update if this was the first visit
+    if (isFirstVisit && creator) {
+      const updatedUser = {
+        ...creator,
+        onboardingCompleted: true
+      };
+      setCurrentUser(updatedUser);
+      success('Setup completed! Your portal is now ready.');
+      setIsFirstVisit(false);
+    }
+  };
   
   // Upcoming events data
   const upcomingEvents = [
@@ -66,6 +98,15 @@ export const DashboardPage: React.FC = () => {
     { id: 3, message: 'NFT collection minting successful', time: '2 hours ago' }
   ];
   
+  const handlePanelChange = (panel: 'overview' | 'analytics' | 'monetization' | 'preview') => {
+    setCurrentPanel(panel);
+    
+    // Provide feedback when changing panels
+    if (panel !== 'overview') {
+      info(`Viewing ${panel} panel`);
+    }
+  };
+  
   const renderPanel = () => {
     switch(currentPanel) {
       case 'analytics':
@@ -73,7 +114,11 @@ export const DashboardPage: React.FC = () => {
       case 'monetization':
         return <MonetizationPanel />;
       case 'preview':
-        return <CreatorPortalPreview />;
+        return <CreatorPortalPreview 
+          creatorName={creator?.name || 'Creator'}
+          creatorAvatar={creator?.customizations?.aiAvatar} 
+          creatorNiche={nicheOptions[creator?.niche || 'educator']}
+        />;
       default:
         return (
           <motion.div 
@@ -119,7 +164,7 @@ export const DashboardPage: React.FC = () => {
                   <Button
                     variant="primary"
                     leftIcon={<Eye size={18} />}
-                    onClick={() => setCurrentPanel('preview')}
+                    onClick={() => handlePanelChange('preview')}
                   >
                     Preview Portal
                   </Button>
@@ -205,7 +250,7 @@ export const DashboardPage: React.FC = () => {
             <motion.div variants={item} className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <Card 
                 className={`${currentPanel === 'analytics' ? 'ring-2 ring-primary' : ''} cursor-pointer hover:shadow-md transition-all`}
-                onClick={() => setCurrentPanel('analytics')}
+                onClick={() => handlePanelChange('analytics')}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -222,7 +267,7 @@ export const DashboardPage: React.FC = () => {
               
               <Card 
                 className={`${currentPanel === 'monetization' ? 'ring-2 ring-primary' : ''} cursor-pointer hover:shadow-md transition-all`}
-                onClick={() => setCurrentPanel('monetization')}
+                onClick={() => handlePanelChange('monetization')}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -239,7 +284,7 @@ export const DashboardPage: React.FC = () => {
               
               <Card 
                 className={`${currentPanel === 'preview' ? 'ring-2 ring-primary' : ''} cursor-pointer hover:shadow-md transition-all`}
-                onClick={() => setCurrentPanel('preview')}
+                onClick={() => handlePanelChange('preview')}
               >
                 <CardContent className="p-4">
                   <div className="flex items-center gap-3">
@@ -269,7 +314,7 @@ export const DashboardPage: React.FC = () => {
                       variant="ghost" 
                       size="sm" 
                       className="text-primary"
-                      onClick={() => setCurrentPanel('analytics')}
+                      onClick={() => handlePanelChange('analytics')}
                     >
                       View Details
                     </Button>
@@ -293,7 +338,12 @@ export const DashboardPage: React.FC = () => {
                       <Bell className="mr-2 h-5 w-5 text-primary" />
                       Recent Activity
                     </CardTitle>
-                    <Button variant="ghost" size="sm" className="text-primary">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-primary"
+                      onClick={() => info('Viewing all notifications')}
+                    >
                       View All
                     </Button>
                   </CardHeader>
@@ -328,7 +378,12 @@ export const DashboardPage: React.FC = () => {
                       <Calendar className="mr-2 h-5 w-5 text-primary" />
                       Upcoming Events
                     </CardTitle>
-                    <Button variant="ghost" size="sm" className="text-primary">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-primary"
+                      onClick={() => info('Calendar view coming soon')}
+                    >
                       View Calendar
                     </Button>
                   </CardHeader>
@@ -367,7 +422,12 @@ export const DashboardPage: React.FC = () => {
                       <Globe className="mr-2 h-5 w-5 text-primary" />
                       Global AI Usage
                     </CardTitle>
-                    <Button variant="ghost" size="sm" className="text-primary">
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      className="text-primary"
+                      onClick={() => info('Detailed map view coming soon')}
+                    >
                       View Map
                     </Button>
                   </CardHeader>
@@ -433,7 +493,7 @@ export const DashboardPage: React.FC = () => {
                     <Button
                       variant="outline"
                       className="h-auto py-4 flex flex-col items-center justify-center gap-2"
-                      onClick={() => setCurrentPanel('analytics')}
+                      onClick={() => handlePanelChange('analytics')}
                     >
                       <BarChart3 className="h-5 w-5 text-green-500" />
                       <span>View Analytics</span>
@@ -442,7 +502,7 @@ export const DashboardPage: React.FC = () => {
                     <Button
                       variant="outline"
                       className="h-auto py-4 flex flex-col items-center justify-center gap-2"
-                      onClick={() => setCurrentPanel('monetization')}
+                      onClick={() => handlePanelChange('monetization')}
                     >
                       <DollarSign className="h-5 w-5 text-amber-500" />
                       <span>Monetization</span>
@@ -451,7 +511,7 @@ export const DashboardPage: React.FC = () => {
                     <Button
                       variant="outline"
                       className="h-auto py-4 flex flex-col items-center justify-center gap-2"
-                      onClick={() => setCurrentPanel('preview')}
+                      onClick={() => handlePanelChange('preview')}
                     >
                       <Globe className="h-5 w-5 text-purple-500" />
                       <span>Preview Portal</span>
@@ -472,10 +532,20 @@ export const DashboardPage: React.FC = () => {
       {/* Setup Wizard Modal */}
       <SetupWizardPortal
         isOpen={showWizard}
-        onClose={() => setShowWizard(false)}
+        onClose={handleWizardClose}
       />
     </div>
   );
+};
+
+// Define niche options for preview component
+const nicheOptions: Record<string, string> = {
+  'coach': 'Business Coach',
+  'educator': 'Educator',
+  'creator': 'Content Creator', 
+  'consultant': 'Consultant',
+  'founder': 'Startup Founder',
+  'author': 'Author'
 };
 
 export default DashboardPage;

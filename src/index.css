@@ -97,6 +97,14 @@
   .modal-backdrop {
     z-index: 100 !important;
   }
+  
+  /* Modal positioning helpers */
+  .modal-centered {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+  }
 }
 
 @layer utilities {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
@@ -6,9 +6,7 @@ import {
   Bot, 
   Palette, 
   Users, 
-  Rocket,
-  Info,
-  Check
+  Rocket
 } from 'lucide-react';
 import { useAppStore } from '../../store';
 import { useToast } from '../../hooks/useToast';
@@ -23,7 +21,7 @@ interface SetupWizardPortalProps {
 export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, onClose }) => {
   const [wizardCompleted, setWizardCompleted] = useState(false);
   const { currentUser, setCurrentUser } = useAppStore();
-  const { success, info } = useToast();
+  const { success } = useToast();
   
   const handleComplete = () => {
     setWizardCompleted(true);
@@ -40,80 +38,57 @@ export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, on
       setWizardCompleted(false);
     }, 1500);
   };
-
-  // If portal is opened, log some debug info
-  useEffect(() => {
-    if (isOpen) {
-      console.log('Setup Wizard Portal opened for user:', currentUser?.name);
-    }
-  }, [isOpen, currentUser]);
   
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
+          {/* Backdrop - full screen with high z-index */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100]"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
             onClick={onClose}
-            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
+            style={{ 
+              position: 'fixed', 
+              top: 0, 
+              left: 0, 
+              right: 0, 
+              bottom: 0 
+            }}
           />
           
-          {/* Modal Container - Centered */}
+          {/* Modal Container - Centered with even higher z-index */}
           <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
-            transition={{ delay: 0.1 }}
-            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-full max-w-4xl max-h-[90vh] overflow-auto p-4"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.3 }}
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] w-full max-w-3xl p-4"
             onClick={(e) => e.stopPropagation()}
-            style={{ 
+            style={{
               position: 'fixed',
-              left: '50%',
               top: '50%',
+              left: '50%',
               transform: 'translate(-50%, -50%)'
             }}
           >
+            {/* Setup Wizard Component */}
             <div className="relative">
-              {/* Close Button */}
+              {/* Close button */}
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="absolute top-4 right-4 z-[102] bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full"
+                className="absolute top-4 right-4 z-10 bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30"
+                aria-label="Close setup wizard"
               >
                 <X className="h-5 w-5" />
               </Button>
               
-              {/* Info badge */}
-              <div className="absolute top-4 left-4 z-[102]">
-                <div className="bg-white/20 backdrop-blur-sm text-white rounded-full py-1 px-3 text-sm flex items-center">
-                  <Info size={14} className="mr-1" />
-                  <span>{wizardCompleted ? 'Setup Complete' : 'Setup Portal'}</span>
-                </div>
-              </div>
-              
-              {/* Setup Wizard */}
               <SetupWizard onComplete={handleComplete} onSkip={onClose} />
-              
-              {/* Success notification */}
-              <AnimatePresence>
-                {wizardCompleted && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -20 }}
-                    className="absolute bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-lg shadow-lg flex items-center"
-                  >
-                    <Check size={16} className="mr-2" />
-                    <span>Setup completed successfully!</span>
-                  </motion.div>
-                )}
-              </AnimatePresence>
             </div>
           </motion.div>
         </>

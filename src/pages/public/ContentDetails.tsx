@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Button } from '../../components/ui/Button';
+import { useToast } from '../../hooks/useToast';
 import { 
   Clock, 
   Users, 
@@ -14,12 +15,17 @@ import {
   Download,
   Play,
   Lock,
-  ChevronRight
+  ChevronRight,
+  Heart,
+  ArrowLeft
 } from 'lucide-react';
 
 export const ContentDetails: React.FC = () => {
   const { id } = useParams();
   const [activeTab, setActiveTab] = useState('overview');
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [isFavorited, setIsFavorited] = useState(false);
+  const { success, info } = useToast();
   
   // Mock content data - in a real app, this would be fetched based on the ID
   const content = {
@@ -28,7 +34,7 @@ export const ContentDetails: React.FC = () => {
     description: 'A comprehensive guide to becoming a full-stack developer, covering frontend, backend, and DevOps.',
     type: 'course',
     access: 'premium',
-    instructor: 'Vikas Creator',
+    instructor: 'Vikas Sahani',
     duration: '8h 30m',
     lessons: 24,
     students: 1234,
@@ -37,29 +43,31 @@ export const ContentDetails: React.FC = () => {
     lastUpdated: '2024-03-15',
     image: 'https://images.pexels.com/photos/7014337/pexels-photo-7014337.jpeg',
     tags: ['web development', 'programming', 'career guide'],
+    price: 49.99,
+    originalPrice: 99.99,
     chapters: [
       {
         title: 'Getting Started',
         lessons: [
-          { title: 'Introduction to Web Development', duration: '15:00' },
-          { title: 'Setting Up Your Development Environment', duration: '20:00' },
-          { title: 'Understanding Web Technologies', duration: '25:00' }
+          { title: 'Introduction to Web Development', duration: '15:00', isPreview: true },
+          { title: 'Setting Up Your Development Environment', duration: '20:00', isPreview: false },
+          { title: 'Understanding Web Technologies', duration: '25:00', isPreview: false }
         ]
       },
       {
         title: 'Frontend Development',
         lessons: [
-          { title: 'HTML5 Fundamentals', duration: '45:00' },
-          { title: 'CSS3 and Modern Layouts', duration: '60:00' },
-          { title: 'JavaScript Essentials', duration: '90:00' }
+          { title: 'HTML5 Fundamentals', duration: '45:00', isPreview: false },
+          { title: 'CSS3 and Modern Layouts', duration: '60:00', isPreview: false },
+          { title: 'JavaScript Essentials', duration: '90:00', isPreview: false }
         ]
       },
       {
         title: 'Backend Development',
         lessons: [
-          { title: 'Node.js Fundamentals', duration: '60:00' },
-          { title: 'Database Design', duration: '45:00' },
-          { title: 'API Development', duration: '75:00' }
+          { title: 'Node.js Fundamentals', duration: '60:00', isPreview: false },
+          { title: 'Database Design', duration: '45:00', isPreview: false },
+          { title: 'API Development', duration: '75:00', isPreview: false }
         ]
       }
     ],
@@ -78,24 +86,77 @@ export const ContentDetails: React.FC = () => {
     ]
   };
 
+  const handleEnroll = () => {
+    setIsEnrolled(true);
+    success('Successfully enrolled in the course!');
+  };
+
+  const handleFavorite = () => {
+    setIsFavorited(!isFavorited);
+    if (!isFavorited) {
+      success('Added to favorites!');
+    } else {
+      info('Removed from favorites');
+    }
+  };
+
+  const handleShare = async () => {
+    try {
+      await navigator.share({
+        title: content.title,
+        text: content.description,
+        url: window.location.href,
+      });
+    } catch (err) {
+      // Fallback to clipboard
+      await navigator.clipboard.writeText(window.location.href);
+      success('Link copied to clipboard!');
+    }
+  };
+
+  const handleLessonClick = (lesson: any, isPreview: boolean) => {
+    if (isPreview || isEnrolled) {
+      info(`Playing: ${lesson.title}`);
+    } else {
+      info('Please enroll to access this lesson');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      {/* Navigation */}
+      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center gap-2 text-sm">
+            <Link to="/" className="text-gray-600 hover:text-primary dark:text-gray-400">
+              Home
+            </Link>
+            <ChevronRight size={16} className="text-gray-400" />
+            <Link to="/" className="text-gray-600 hover:text-primary dark:text-gray-400">
+              Courses
+            </Link>
+            <ChevronRight size={16} className="text-gray-400" />
+            <span className="text-gray-900 dark:text-white">{content.title}</span>
+          </div>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-primary-500 to-secondary-600 text-white">
         <div className="container mx-auto px-4 py-12">
           <div className="flex flex-col lg:flex-row gap-8">
             {/* Content Info */}
             <div className="lg:w-2/3">
-              <div className="flex items-center gap-2 mb-4">
-                <Link 
-                  to="/portal/content"
-                  className="text-white/80 hover:text-white text-sm"
+              <Link to="/">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="mb-4 border-white/20 text-white hover:bg-white/10"
+                  leftIcon={<ArrowLeft size={16} />}
                 >
-                  Courses
-                </Link>
-                <ChevronRight size={16} className="text-white/60" />
-                <span className="text-white/80 text-sm">Web Development</span>
-              </div>
+                  Back to Home
+                </Button>
+              </Link>
               
               <h1 className="text-3xl md:text-4xl font-bold mb-4">
                 {content.title}
@@ -105,7 +166,7 @@ export const ContentDetails: React.FC = () => {
                 {content.description}
               </p>
               
-              <div className="flex flex-wrap gap-6 text-white/90">
+              <div className="flex flex-wrap gap-6 text-white/90 mb-6">
                 <div className="flex items-center gap-2">
                   <Clock size={18} />
                   <span>{content.duration}</span>
@@ -124,21 +185,45 @@ export const ContentDetails: React.FC = () => {
                 </div>
               </div>
               
-              <div className="mt-8 flex flex-wrap gap-4">
-                <Button
-                  size="lg"
-                  className="bg-white text-primary hover:bg-gray-100"
-                  leftIcon={<Play size={16} />}
-                >
-                  Start Learning
-                </Button>
+              <div className="flex flex-wrap gap-4">
+                {isEnrolled ? (
+                  <Button
+                    size="lg"
+                    className="bg-green-600 hover:bg-green-700"
+                    leftIcon={<Play size={16} />}
+                    onClick={() => info('Starting course...')}
+                  >
+                    Continue Learning
+                  </Button>
+                ) : (
+                  <Button
+                    size="lg"
+                    className="bg-white text-primary hover:bg-gray-100"
+                    leftIcon={<Play size={16} />}
+                    onClick={handleEnroll}
+                  >
+                    Enroll Now
+                  </Button>
+                )}
                 <Button
                   size="lg"
                   variant="outline"
                   className="border-white text-white hover:bg-white/10"
                   leftIcon={<Share2 size={16} />}
+                  onClick={handleShare}
                 >
                   Share Course
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className={`border-white hover:bg-white/10 ${
+                    isFavorited ? 'text-red-400' : 'text-white'
+                  }`}
+                  leftIcon={<Heart size={16} fill={isFavorited ? 'currentColor' : 'none'} />}
+                  onClick={handleFavorite}
+                >
+                  {isFavorited ? 'Favorited' : 'Add to Favorites'}
                 </Button>
               </div>
             </div>
@@ -156,6 +241,7 @@ export const ContentDetails: React.FC = () => {
                     <Button
                       size="lg"
                       className="rounded-full h-16 w-16 bg-white/90 hover:bg-white text-primary"
+                      onClick={() => info('Playing preview...')}
                     >
                       <Play size={24} />
                     </Button>
@@ -165,15 +251,20 @@ export const ContentDetails: React.FC = () => {
                 <div className="p-6">
                   <div className="flex items-center justify-between mb-4">
                     <div className="text-2xl font-bold text-gray-900 dark:text-white">
-                      $49.99
+                      ${content.price}
                     </div>
                     <div className="text-sm text-gray-500 line-through">
-                      $99.99
+                      ${content.originalPrice}
                     </div>
                   </div>
                   
-                  <Button className="w-full mb-4" size="lg">
-                    Enroll Now
+                  <Button 
+                    className="w-full mb-4" 
+                    size="lg"
+                    onClick={handleEnroll}
+                    disabled={isEnrolled}
+                  >
+                    {isEnrolled ? 'Enrolled ✓' : 'Enroll Now'}
                   </Button>
                   
                   <div className="space-y-4 text-sm text-gray-600 dark:text-gray-400">
@@ -204,36 +295,23 @@ export const ContentDetails: React.FC = () => {
       {/* Content Tabs */}
       <div className="container mx-auto px-4 py-8">
         <div className="flex border-b border-gray-200 dark:border-gray-700 mb-8">
-          <button
-            className={`px-6 py-3 text-sm font-medium ${
-              activeTab === 'overview'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('overview')}
-          >
-            Overview
-          </button>
-          <button
-            className={`px-6 py-3 text-sm font-medium ${
-              activeTab === 'curriculum'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('curriculum')}
-          >
-            Curriculum
-          </button>
-          <button
-            className={`px-6 py-3 text-sm font-medium ${
-              activeTab === 'reviews'
-                ? 'border-b-2 border-primary text-primary'
-                : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
-            }`}
-            onClick={() => setActiveTab('reviews')}
-          >
-            Reviews
-          </button>
+          {[
+            { id: 'overview', label: 'Overview' },
+            { id: 'curriculum', label: 'Curriculum' },
+            { id: 'reviews', label: 'Reviews' }
+          ].map((tab) => (
+            <button
+              key={tab.id}
+              className={`px-6 py-3 text-sm font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'border-b-2 border-primary text-primary'
+                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
         
         {/* Tab Content */}
@@ -251,7 +329,7 @@ export const ContentDetails: React.FC = () => {
                         key={idx}
                         className="flex items-start gap-2 text-gray-700 dark:text-gray-300"
                       >
-                        <svg className="h-5 w-5 text-green-500 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                         </svg>
                         <span>{outcome}</span>
@@ -290,20 +368,29 @@ export const ContentDetails: React.FC = () => {
                     </div>
                     <div className="divide-y divide-gray-200 dark:divide-gray-700">
                       {chapter.lessons.map((lesson, lessonIdx) => (
-                        <div 
+                        <button
                           key={lessonIdx}
-                          className="px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800"
+                          className="w-full px-4 py-3 flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-800 text-left transition-colors"
+                          onClick={() => handleLessonClick(lesson, lesson.isPreview)}
                         >
                           <div className="flex items-center gap-3">
                             <Play size={16} className="text-gray-400" />
                             <span className="text-gray-700 dark:text-gray-300">
                               {lesson.title}
                             </span>
+                            {lesson.isPreview && (
+                              <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
+                                Preview
+                              </span>
+                            )}
+                            {!lesson.isPreview && !isEnrolled && (
+                              <Lock size={14} className="text-gray-400" />
+                            )}
                           </div>
                           <span className="text-sm text-gray-500 dark:text-gray-400">
                             {lesson.duration}
                           </span>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -343,7 +430,7 @@ export const ContentDetails: React.FC = () => {
                           <div 
                             className="h-full bg-yellow-400"
                             style={{ 
-                              width: `${Math.random() * 100}%`
+                              width: `${rating === 5 ? 70 : rating === 4 ? 20 : rating === 3 ? 5 : rating === 2 ? 3 : 2}%`
                             }}
                           />
                         </div>
@@ -352,9 +439,12 @@ export const ContentDetails: React.FC = () => {
                   </div>
                 </div>
                 
-                {/* Mock reviews */}
                 <div className="space-y-6">
-                  {[...Array(3)].map((_, idx) => (
+                  {[
+                    { name: 'Alex Chen', rating: 5, comment: 'Excellent course! The content is well-structured and the instructor explains everything clearly. I\'ve learned a lot and feel more confident in my web development skills.', time: '2 weeks ago' },
+                    { name: 'Sarah Johnson', rating: 5, comment: 'This course exceeded my expectations. The hands-on projects really helped me understand the concepts better.', time: '1 month ago' },
+                    { name: 'Mike Rodriguez', rating: 4, comment: 'Great course overall. Would love to see more advanced topics covered in future updates.', time: '3 weeks ago' }
+                  ].map((review, idx) => (
                     <div 
                       key={idx}
                       className="border-b border-gray-200 dark:border-gray-700 pb-6"
@@ -365,13 +455,13 @@ export const ContentDetails: React.FC = () => {
                           alt="Reviewer"
                           className="w-10 h-10 rounded-full"
                         />
-                        <div>
+                        <div className="flex-1">
                           <div className="flex items-center gap-2 mb-1">
                             <h4 className="font-medium text-gray-900 dark:text-white">
-                              Student {idx + 1}
+                              {review.name}
                             </h4>
                             <span className="text-sm text-gray-500 dark:text-gray-400">
-                              • 2 weeks ago
+                              • {review.time}
                             </span>
                           </div>
                           <div className="flex items-center gap-1 mb-2">
@@ -379,14 +469,13 @@ export const ContentDetails: React.FC = () => {
                               <Star
                                 key={starIdx}
                                 size={14}
-                                className={starIdx < 5 ? 'text-yellow-400' : 'text-gray-300'}
+                                className={starIdx < review.rating ? 'text-yellow-400' : 'text-gray-300'}
                                 fill="currentColor"
                               />
                             ))}
                           </div>
                           <p className="text-gray-700 dark:text-gray-300">
-                            Great course! The content is well-structured and the instructor explains everything clearly.
-                            I've learned a lot and feel more confident in my web development skills.
+                            {review.comment}
                           </p>
                         </div>
                       </div>
@@ -429,25 +518,26 @@ export const ContentDetails: React.FC = () => {
             
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
               <h3 className="font-medium text-gray-900 dark:text-white mb-4">
-                Share this course
+                Instructor
               </h3>
-              <div className="flex gap-2">
-                <Button variant="outline" size="icon" className="flex-1">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
-                  </svg>
-                </Button>
-                <Button variant="outline" size="icon" className="flex-1">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
-                  </svg>
-                </Button>
-                <Button variant="outline" size="icon" className="flex-1">
-                  <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path fillRule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clipRule="evenodd" />
-                  </svg>
-                </Button>
+              <div className="flex items-center gap-3 mb-4">
+                <img
+                  src="/20240506_120440.jpg"
+                  alt={content.instructor}
+                  className="w-12 h-12 rounded-full object-cover"
+                />
+                <div>
+                  <h4 className="font-medium text-gray-900 dark:text-white">
+                    {content.instructor}
+                  </h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Senior Developer & AI Enthusiast
+                  </p>
+                </div>
               </div>
+              <Button variant="outline" className="w-full" onClick={() => info('Viewing instructor profile...')}>
+                View Profile
+              </Button>
             </div>
           </div>
         </div>

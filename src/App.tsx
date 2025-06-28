@@ -21,6 +21,7 @@ import { SettingsPage } from './pages/dashboard/SettingsPage';
 import LicensePage from './pages/public/LicensePage';
 import AboutPage from './pages/public/AboutPage';
 import HomePage from './pages/public/HomePage';
+import ContentDetails from './pages/public/ContentDetails';
 
 import { ConsumerDashboard } from './pages/consumer/ConsumerDashboard';
 import { ContentLibrary } from './pages/consumer/ContentLibrary';
@@ -81,6 +82,7 @@ function App() {
         {/* Public Routes */}
         <Route element={<PublicPortalLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/content/:id" element={<ContentDetails />} />
           <Route path="/license" element={<LicensePage />} />
           <Route path="/about" element={<AboutPage />} />
           

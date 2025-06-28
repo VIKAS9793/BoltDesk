@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Button } from '../../components/ui/Button';
 import { Card, CardContent } from '../../components/ui/Card';
+import { useToast } from '../../hooks/useToast';
 import { 
   ExternalLink, 
   ArrowRight, 
@@ -22,12 +23,15 @@ import {
   FileText,
   Headphones,
   Sparkles,
-  CheckCircle2
+  CheckCircle2,
+  X
 } from 'lucide-react';
 
 export const HomePage: React.FC = () => {
   const [isVideoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const navigate = useNavigate();
+  const { success, info } = useToast();
   
   // Featured content with enhanced metadata
   const featuredContent = [
@@ -126,6 +130,46 @@ export const HomePage: React.FC = () => {
     }
   };
 
+  const handleContentClick = (contentId: string) => {
+    navigate(`/content/${contentId}`);
+  };
+
+  const handleEventRegister = (eventId: string) => {
+    success(`Registered for event ${eventId}!`);
+  };
+
+  const handleCategoryFilter = (categoryId: string) => {
+    setSelectedCategory(categoryId);
+    info(`Showing ${categoryId} content`);
+  };
+
+  const handleVideoModal = () => {
+    setVideoModalOpen(true);
+    info('Playing demo video...');
+  };
+
+  const handleStartCreating = () => {
+    navigate('/login');
+  };
+
+  const handleBrowseContent = () => {
+    // Scroll to content section
+    const contentSection = document.getElementById('featured-content');
+    if (contentSection) {
+      contentSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleJoinAsCreator = () => {
+    navigate('/login');
+  };
+
+  const handleNewsletterSignup = (email: string) => {
+    if (email) {
+      success('Successfully subscribed to newsletter!');
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero section */}
@@ -160,7 +204,7 @@ export const HomePage: React.FC = () => {
                 size="lg"
                 className="bg-white text-primary hover:bg-gray-100 h-14 px-8 text-base"
                 leftIcon={<Sparkles size={18} />}
-                onClick={() => setVideoModalOpen(true)}
+                onClick={handleVideoModal}
               >
                 See How It Works
               </Button>
@@ -169,6 +213,7 @@ export const HomePage: React.FC = () => {
                 variant="outline"
                 className="border-white text-white hover:bg-white/10 h-14 px-8 text-base"
                 leftIcon={<Crown size={18} />}
+                onClick={handleStartCreating}
               >
                 Start Creating Today
               </Button>
@@ -267,6 +312,7 @@ export const HomePage: React.FC = () => {
                 variant="primary"
                 className="mt-6"
                 rightIcon={<ArrowRight size={16} />}
+                onClick={handleJoinAsCreator}
               >
                 Start Creating
               </Button>
@@ -309,6 +355,7 @@ export const HomePage: React.FC = () => {
                 variant="secondary"
                 className="mt-6"
                 rightIcon={<ArrowRight size={16} />}
+                onClick={handleBrowseContent}
               >
                 Explore Content
               </Button>
@@ -326,7 +373,7 @@ export const HomePage: React.FC = () => {
                 key={category.id}
                 variant={selectedCategory === category.id ? 'primary' : 'outline'}
                 className="whitespace-nowrap px-6 py-3 text-base"
-                onClick={() => setSelectedCategory(category.id)}
+                onClick={() => handleCategoryFilter(category.id)}
               >
                 {category.icon && <category.icon className="h-4 w-4 mr-2" />}
                 {category.name}
@@ -337,7 +384,7 @@ export const HomePage: React.FC = () => {
       </section>
 
       {/* Featured content section */}
-      <section className="py-16 bg-white dark:bg-gray-800">
+      <section id="featured-content" className="py-16 bg-white dark:bg-gray-800">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
             <div>
@@ -348,20 +395,21 @@ export const HomePage: React.FC = () => {
                 Start learning with our most popular resources
               </p>
             </div>
-            <Link 
-              to="/portal/content" 
-              className="mt-4 md:mt-0 inline-flex items-center text-primary hover:text-primary-600 font-medium"
+            <Button
+              variant="outline"
+              rightIcon={<ArrowRight size={16} />}
+              onClick={handleBrowseContent}
             >
               View all content
-              <ArrowRight size={16} className="ml-1" />
-            </Link>
+            </Button>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {featuredContent.map((content) => (
               <Card 
                 key={content.id} 
-                className="group overflow-hidden"
+                className="group overflow-hidden cursor-pointer hover:shadow-lg transition-all"
+                onClick={() => handleContentClick(content.id)}
               >
                 <div className="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-gray-700 relative">
                   <img 
@@ -373,6 +421,7 @@ export const HomePage: React.FC = () => {
                     <Button
                       variant="outline"
                       className="border-white text-white hover:bg-white hover:text-primary"
+                      leftIcon={<Play size={16} />}
                     >
                       Preview Course
                     </Button>
@@ -447,16 +496,18 @@ export const HomePage: React.FC = () => {
                     ))}
                   </div>
 
-                  <Link to={`/portal/content/${content.id}`}>
-                    <Button 
-                      variant={content.access === 'free' ? 'primary' : 'outline'} 
-                      size="sm"
-                      className="w-full"
-                      rightIcon={<ArrowRight size={16} />}
-                    >
-                      {content.access === 'free' ? 'Start Learning' : 'Learn More'}
-                    </Button>
-                  </Link>
+                  <Button 
+                    variant={content.access === 'free' ? 'primary' : 'outline'} 
+                    size="sm"
+                    className="w-full"
+                    rightIcon={<ArrowRight size={16} />}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleContentClick(content.id);
+                    }}
+                  >
+                    {content.access === 'free' ? 'Start Learning' : 'Learn More'}
+                  </Button>
                 </CardContent>
               </Card>
             ))}
@@ -509,6 +560,7 @@ export const HomePage: React.FC = () => {
                     variant="outline" 
                     size="sm" 
                     className="w-full mt-4"
+                    onClick={() => handleEventRegister(event.id)}
                   >
                     Register Now
                   </Button>
@@ -648,6 +700,7 @@ export const HomePage: React.FC = () => {
             <Button
               size="lg"
               className="bg-white text-accent-600 hover:bg-gray-100"
+              onClick={handleJoinAsCreator}
             >
               Join as Creator
             </Button>
@@ -655,6 +708,7 @@ export const HomePage: React.FC = () => {
               size="lg"
               variant="outline"
               className="border-white text-white hover:bg-white/10"
+              onClick={handleBrowseContent}
             >
               Browse Content
             </Button>
@@ -682,6 +736,43 @@ export const HomePage: React.FC = () => {
         </div>
       </section>
 
+      {/* Newsletter Signup */}
+      <section className="py-12 bg-gray-50 dark:bg-gray-900/50">
+        <div className="container mx-auto px-4 text-center">
+          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
+            Stay Updated
+          </h3>
+          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+            Get the latest updates on new creators, courses, and platform features.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              onKeyPress={(e) => {
+                if (e.key === 'Enter') {
+                  handleNewsletterSignup((e.target as HTMLInputElement).value);
+                  (e.target as HTMLInputElement).value = '';
+                }
+              }}
+            />
+            <Button 
+              variant="primary"
+              onClick={(e) => {
+                const input = e.currentTarget.parentElement?.querySelector('input') as HTMLInputElement;
+                if (input) {
+                  handleNewsletterSignup(input.value);
+                  input.value = '';
+                }
+              }}
+            >
+              Subscribe
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Footer reference */}
       <div className="py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50">
         Built with <a href="https://bolt.new" className="text-primary hover:text-primary-600" target="_blank" rel="noopener noreferrer">bolt.new</a>
@@ -698,15 +789,15 @@ export const HomePage: React.FC = () => {
                 size="icon"
                 onClick={() => setVideoModalOpen(false)}
               >
-                <svg className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
+                <X className="h-5 w-5" />
               </Button>
             </div>
-            <div className="aspect-video bg-black">
-              {/* Video player would go here */}
+            <div className="aspect-video bg-black rounded-b-lg">
               <div className="h-full flex items-center justify-center text-white">
-                Video player placeholder
+                <div className="text-center">
+                  <Play className="h-16 w-16 mx-auto mb-4" />
+                  <p>Demo video coming soon!</p>
+                </div>
               </div>
             </div>
           </div>

@@ -29,13 +29,21 @@ import { Subscriptions } from './pages/consumer/Subscriptions';
 import { ConsumerSettings } from './pages/consumer/ConsumerSettings';
 
 function App() {
-  const { isDarkMode } = useAppStore();
+  const { isDarkMode, isAuthenticated, currentUser } = useAppStore();
   const { toasts, hideToast } = useToast();
   
   // Initialize dark mode from system preference
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
   }, [isDarkMode]);
+  
+  // Debug logging for app state
+  useEffect(() => {
+    console.log('=== App State ===');
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('currentUser:', currentUser);
+    console.log('=================');
+  }, [isAuthenticated, currentUser]);
   
   return (
     <BrowserRouter>
@@ -45,7 +53,7 @@ function App() {
           <Route path="/login" element={<Login />} />
         </Route>
 
-        {/* Dashboard Routes */}
+        {/* Creator Dashboard Routes */}
         <Route path="/dashboard" element={<CreatorDashboardLayout />}>
           <Route index element={<DashboardPage />} />
           <Route path="content" element={<ContentManagementPage />} />
@@ -56,7 +64,7 @@ function App() {
           <Route path="settings/domain" element={<DomainSettingsPage />} />
         </Route>
 
-        {/* Consumer Routes */}
+        {/* Consumer Dashboard Routes */}
         <Route path="/consumer" element={<ConsumerDashboardLayout />}>
           <Route index element={<ConsumerDashboard />} />
           <Route path="library" element={<ContentLibrary />} />

@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react';
 import { useAppStore } from '../store';
-import { Navigate, Outlet } from 'react-router-dom';
+import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { ConsumerSidebar } from '../components/consumer/ConsumerSidebar';
 import { ConsumerTopBar } from '../components/consumer/ConsumerTopBar';
 import { Toaster } from 'sonner';
 
-const ConsumerDashboardLayout: React.FC = () => {
+export const ConsumerDashboardLayout: React.FC = () => {
   const { 
     isAuthenticated,
     currentUser,
@@ -13,35 +13,44 @@ const ConsumerDashboardLayout: React.FC = () => {
     toggleSidebar, 
     isDarkMode 
   } = useAppStore();
+  
+  const location = useLocation();
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
   }, [isDarkMode]);
   
-  // Debug logging
-  console.log('ConsumerDashboardLayout - Auth state:', { 
-    isAuthenticated, 
-    currentUser: currentUser ? {
-      id: currentUser.id,
-      name: currentUser.name,
-      role: currentUser.role
-    } : null 
-  });
+  // Comprehensive debug logging
+  useEffect(() => {
+    console.log('=== ConsumerDashboardLayout Debug ===');
+    console.log('Location:', location.pathname);
+    console.log('isAuthenticated:', isAuthenticated);
+    console.log('currentUser:', currentUser);
+    console.log('=====================================');
+  }, [location.pathname, isAuthenticated, currentUser]);
   
+  // Check authentication first
   if (!isAuthenticated) {
-    console.log('Not authenticated, redirecting to login');
+    console.log('❌ Not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
+  // Check if user exists
   if (!currentUser) {
-    console.log('No current user, redirecting to login');
+    console.log('❌ No current user, redirecting to login');
     return <Navigate to="/login" replace />;
   }
 
+  // Check user role
   if (currentUser.role !== 'audience') {
-    console.log('User role is not audience, redirecting to dashboard');
-    return <Navigate to="/dashboard" replace />;
+    console.log('❌ User role is not audience, role:', currentUser.role);
+    if (currentUser.role === 'creator') {
+      return <Navigate to="/dashboard" replace />;
+    }
+    return <Navigate to="/login" replace />;
   }
+
+  console.log('✅ All checks passed, rendering ConsumerDashboardLayout');
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">

@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import { Creator, Audience, Content, AIMessage, Subscription } from '../types';
 
 interface AppState {
@@ -41,48 +42,66 @@ interface AppState {
   removeNotification: (id: string) => void;
 }
 
-export const useAppStore = create<AppState>((set) => ({
-  // Initial state
-  currentUser: null,
-  isAuthenticated: false,
-  isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
-  creatorContent: [],
-  featuredContent: [],
-  aiAgentName: 'Vikas',
-  aiMessages: [],
-  isAIProcessing: false,
-  subscriptions: [],
-  isSidebarOpen: true,
-  currentView: 'dashboard',
-  isLoading: false,
-  notifications: [],
-  
-  // Actions
-  setCurrentUser: (user) => set({ currentUser: user }),
-  setAuthenticated: (value) => set({ isAuthenticated: value }),
-  toggleDarkMode: () => set((state) => {
-    const newDarkMode = !state.isDarkMode;
-    document.documentElement.classList.toggle('dark', newDarkMode);
-    return { isDarkMode: newDarkMode };
-  }),
-  setCreatorContent: (content) => set({ creatorContent: content }),
-  addContent: (content) => set((state) => ({
-    creatorContent: [...state.creatorContent, content]
-  })),
-  removeContent: (contentId) => set((state) => ({
-    creatorContent: state.creatorContent.filter((item) => item.id !== contentId)
-  })),
-  addAIMessage: (message) => set((state) => ({
-    aiMessages: [...state.aiMessages, message]
-  })),
-  setAIProcessing: (isProcessing) => set({ isAIProcessing: isProcessing }),
-  toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
-  setCurrentView: (view) => set({ currentView: view }),
-  setLoading: (isLoading) => set({ isLoading }),
-  addNotification: (notification) => set((state) => ({
-    notifications: [...state.notifications, { id: Date.now().toString(), ...notification }]
-  })),
-  removeNotification: (id) => set((state) => ({
-    notifications: state.notifications.filter((item) => item.id !== id)
-  })),
-}));
+export const useAppStore = create<AppState>()(
+  persist(
+    (set, get) => ({
+      // Initial state
+      currentUser: null,
+      isAuthenticated: false,
+      isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+      creatorContent: [],
+      featuredContent: [],
+      aiAgentName: 'Vikas',
+      aiMessages: [],
+      isAIProcessing: false,
+      subscriptions: [],
+      isSidebarOpen: true,
+      currentView: 'dashboard',
+      isLoading: false,
+      notifications: [],
+      
+      // Actions
+      setCurrentUser: (user) => {
+        console.log('🔄 Store: Setting current user:', user);
+        set({ currentUser: user });
+      },
+      setAuthenticated: (value) => {
+        console.log('🔄 Store: Setting authenticated:', value);
+        set({ isAuthenticated: value });
+      },
+      toggleDarkMode: () => set((state) => {
+        const newDarkMode = !state.isDarkMode;
+        document.documentElement.classList.toggle('dark', newDarkMode);
+        return { isDarkMode: newDarkMode };
+      }),
+      setCreatorContent: (content) => set({ creatorContent: content }),
+      addContent: (content) => set((state) => ({
+        creatorContent: [...state.creatorContent, content]
+      })),
+      removeContent: (contentId) => set((state) => ({
+        creatorContent: state.creatorContent.filter((item) => item.id !== contentId)
+      })),
+      addAIMessage: (message) => set((state) => ({
+        aiMessages: [...state.aiMessages, message]
+      })),
+      setAIProcessing: (isProcessing) => set({ isAIProcessing: isProcessing }),
+      toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+      setCurrentView: (view) => set({ currentView: view }),
+      setLoading: (isLoading) => set({ isLoading }),
+      addNotification: (notification) => set((state) => ({
+        notifications: [...state.notifications, { id: Date.now().toString(), ...notification }]
+      })),
+      removeNotification: (id) => set((state) => ({
+        notifications: state.notifications.filter((item) => item.id !== id)
+      })),
+    }),
+    {
+      name: 'boltdesk-store',
+      partialize: (state) => ({
+        currentUser: state.currentUser,
+        isAuthenticated: state.isAuthenticated,
+        isDarkMode: state.isDarkMode,
+      }),
+    }
+  )
+);

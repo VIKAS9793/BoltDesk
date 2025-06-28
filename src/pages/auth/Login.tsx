@@ -31,6 +31,11 @@ export const Login: React.FC = () => {
     setError('');
     setIsLoading(true);
     
+    console.log('=== Login Attempt ===');
+    console.log('Selected role:', selectedRole);
+    console.log('Email:', email);
+    console.log('====================');
+    
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -71,12 +76,14 @@ export const Login: React.FC = () => {
           }
         };
         
-        console.log('Setting creator user:', mockUser);
+        console.log('✅ Creator login successful, setting user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
         success('Successfully logged in as creator!');
         
+        console.log('🔄 Navigating to /dashboard');
         navigate('/dashboard');
+        
       } else if (selectedRole === 'consumer' && email === 'consumer@example.com' && password === 'password') {
         const mockUser: Audience = {
           id: '2',
@@ -88,18 +95,28 @@ export const Login: React.FC = () => {
           subscriptionTier: 'free'
         };
         
-        console.log('Setting consumer user:', mockUser);
+        console.log('✅ Consumer login successful, setting user:', mockUser);
+        
+        // Set user and authentication state
         setCurrentUser(mockUser);
         setAuthenticated(true);
+        
+        // Wait a moment for state to update
+        await new Promise(resolve => setTimeout(resolve, 100));
+        
         success('Successfully logged in as consumer!');
         
+        console.log('🔄 Navigating to /consumer');
         navigate('/consumer');
+        
       } else {
-        setError(`Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`);
+        const errorMsg = `Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`;
+        console.log('❌ Login failed:', errorMsg);
+        setError(errorMsg);
       }
     } catch (err) {
+      console.error('❌ Login error:', err);
       setError('An error occurred during login. Please try again.');
-      console.error(err);
     } finally {
       setIsLoading(false);
     }

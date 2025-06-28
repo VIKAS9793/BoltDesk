@@ -31,11 +31,6 @@ export const Login: React.FC = () => {
     setError('');
     setIsLoading(true);
     
-    console.log('=== Login Attempt ===');
-    console.log('Selected role:', selectedRole);
-    console.log('Email:', email);
-    console.log('====================');
-    
     try {
       await new Promise(resolve => setTimeout(resolve, 1000));
       
@@ -49,9 +44,9 @@ export const Login: React.FC = () => {
           portalName: 'Vikas Creates',
           portalDescription: 'Your hub for creative content and community',
           customizations: {
-            primaryColor: '#3B82F6',
-            secondaryColor: '#9333EA',
-            accentColor: '#14B8A6',
+            primaryColor: '#1A73E8',
+            secondaryColor: '#9334E6',
+            accentColor: '#00A49A',
             aiAgentName: 'Vikas Assistant',
             darkMode: false
           },
@@ -76,14 +71,11 @@ export const Login: React.FC = () => {
           }
         };
         
-        console.log('✅ Creator login successful, setting user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
-        success('Successfully logged in as creator!');
+        success('Successfully logged in!');
         
-        console.log('🔄 Navigating to /dashboard');
         navigate('/dashboard');
-        
       } else if (selectedRole === 'consumer' && email === 'consumer@example.com' && password === 'password') {
         const mockUser: Audience = {
           id: '2',
@@ -95,29 +87,17 @@ export const Login: React.FC = () => {
           subscriptionTier: 'free'
         };
         
-        console.log('✅ Consumer login successful, setting user:', mockUser);
-        
-        // Set user and authentication state
         setCurrentUser(mockUser);
         setAuthenticated(true);
-        
-        // Show success message
         success('Successfully logged in as consumer!');
         
-        console.log('🔄 Navigating to /consumer');
-        // Use a timeout to ensure state has been updated before navigation
-        setTimeout(() => {
-          navigate('/consumer');
-        }, 100);
-        
+        navigate('/consumer');
       } else {
-        const errorMsg = `Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`;
-        console.log('❌ Login failed:', errorMsg);
-        setError(errorMsg);
+        setError(`Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`);
       }
     } catch (err) {
-      console.error('❌ Login error:', err);
       setError('An error occurred during login. Please try again.');
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -149,37 +129,37 @@ export const Login: React.FC = () => {
           Welcome to BoltDesk
         </h2>
         
-        <p className="text-gray-600 dark:text-gray-400 mb-8">
+        <p className="text-gray-700 dark:text-gray-300 mb-8">
           Choose how you want to sign in
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
           <button
             onClick={() => handleRoleSelect('creator')}
-            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary/5 transition-all text-left shadow-lg hover:shadow-xl"
+            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary/5 transition-all text-left shadow-md hover:shadow-lg group"
           >
-            <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center mb-4">
-              <Crown className="h-6 w-6 text-primary" />
+            <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors border border-primary/30">
+              <Crown className="h-6 w-6 text-primary-600" />
             </div>
             <h3 className="font-medium text-lg text-gray-900 dark:text-white mb-2">
               Sign in as Creator
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
               Create and monetize content, manage your portal, and engage with your audience
             </p>
           </button>
           
           <button
             onClick={() => handleRoleSelect('consumer')}
-            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-secondary hover:bg-secondary/5 transition-all text-left shadow-lg hover:shadow-xl"
+            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-secondary hover:bg-secondary/5 transition-all text-left shadow-md hover:shadow-lg group"
           >
-            <div className="h-12 w-12 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
-              <Users className="h-6 w-6 text-secondary" />
+            <div className="h-12 w-12 rounded-full bg-secondary-100 flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors border border-secondary/30">
+              <Users className="h-6 w-6 text-secondary-600" />
             </div>
             <h3 className="font-medium text-lg text-gray-900 dark:text-white mb-2">
               Sign in as Consumer
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
+            <p className="text-sm text-gray-700 dark:text-gray-300">
               Access premium content, interact with creators, and join communities
             </p>
           </button>
@@ -192,24 +172,24 @@ export const Login: React.FC = () => {
     <div>
       <div className="flex items-center justify-between mb-6">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
-          className="text-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm"
           onClick={() => setSelectedRole(null)}
           leftIcon={<ArrowLeft size={16} />}
         >
           Back
         </Button>
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
           {selectedRole === 'creator' ? (
             <>
-              <Crown size={16} className="text-primary" />
-              <span className="font-medium">Creator Login</span>
+              <Crown size={16} className="text-primary-600" />
+              <span>Creator Login</span>
             </>
           ) : (
             <>
-              <Users size={16} className="text-secondary" />
-              <span className="font-medium">Consumer Login</span>
+              <Users size={16} className="text-secondary-600" />
+              <span>Consumer Login</span>
             </>
           )}
         </div>
@@ -223,14 +203,14 @@ export const Login: React.FC = () => {
       </h2>
       
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-3 rounded-md mb-4 text-sm border border-red-200 dark:border-red-800 shadow-md">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-4 rounded-lg mb-4 text-sm border border-red-200 dark:border-red-800 shadow-md">
           {error}
         </div>
       )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label htmlFor="email" className="block text-sm font-medium text-gray-800 dark:text-gray-300 mb-1">
             Email
           </label>
           <input
@@ -239,17 +219,17 @@ export const Login: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="your@email.com"
           />
         </div>
         
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+            <label htmlFor="password" className="block text-sm font-medium text-gray-800 dark:text-gray-300">
               Password
             </label>
-            <a href="#" className="text-sm text-primary hover:text-primary-600 font-medium">
+            <a href="#" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
               Forgot password?
             </a>
           </div>
@@ -259,7 +239,7 @@ export const Login: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="••••••••"
           />
         </div>
@@ -280,7 +260,7 @@ export const Login: React.FC = () => {
           <Button
             type="submit"
             variant="primary"
-            className="w-full shadow-lg hover:shadow-xl"
+            className="w-full font-medium text-base py-2.5"
             isLoading={isLoading}
             elevation={3}
           >
@@ -295,7 +275,7 @@ export const Login: React.FC = () => {
             <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
+            <span className="px-2 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400">
               Or continue with
             </span>
           </div>
@@ -305,7 +285,7 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full shadow-sm hover:shadow-md"
+            className="w-full border-gray-300 dark:border-gray-600 shadow-sm hover:border-gray-400"
             onClick={() => handleSocialLoginClick('google')}
             isLoading={socialLoading === 'google'}
           >
@@ -333,7 +313,7 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full shadow-sm hover:shadow-md"
+            className="w-full border-gray-300 dark:border-gray-600 shadow-sm hover:border-gray-400"
             onClick={() => handleSocialLoginClick('twitter')}
             isLoading={socialLoading === 'twitter'}
           >
@@ -346,7 +326,7 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full shadow-sm hover:shadow-md"
+            className="w-full border-gray-300 dark:border-gray-600 shadow-sm hover:border-gray-400"
             onClick={() => handleSocialLoginClick('github')}
             isLoading={socialLoading === 'github'}
           >
@@ -359,16 +339,16 @@ export const Login: React.FC = () => {
       </div>
       
       <div className="mt-6 text-center text-sm">
-        <p className="text-gray-600 dark:text-gray-400">
+        <p className="text-gray-700 dark:text-gray-300">
           Don't have an account?{' '}
-          <a href="#" className="text-primary hover:text-primary-600 font-medium">
+          <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
             Sign up
           </a>
         </p>
       </div>
       
       {/* Demo account info */}
-      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md border border-blue-200 dark:border-blue-800 shadow-md">
+      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg shadow-md border border-blue-200 dark:border-blue-800">
         <p className="text-sm text-gray-800 dark:text-gray-200">
           <span className="font-semibold">Demo credentials:</span>{' '}
           {selectedRole === 'creator' ? 'creator@example.com' : 'consumer@example.com'} / password
@@ -376,8 +356,8 @@ export const Login: React.FC = () => {
       </div>
       
       {/* bolt.new reference */}
-      <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-        Built with <a href="https://bolt.new" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-600 font-medium">bolt.new</a>
+      <div className="mt-4 text-center text-xs text-gray-600 dark:text-gray-400">
+        Built with <a href="https://bolt.new" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 font-medium">bolt.new</a>
       </div>
     </div>
   );

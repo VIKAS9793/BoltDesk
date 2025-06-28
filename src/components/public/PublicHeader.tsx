@@ -3,15 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { Button } from '../ui/Button';
-import { LogIn, Moon, Sun, LayoutDashboard, LogOut } from 'lucide-react';
+import { useToast } from '../../hooks/useToast';
+import { LogIn, Moon, Sun, LayoutDashboard, LogOut, User } from 'lucide-react';
 
 const PublicHeader = () => {
   const { isDarkMode, toggleDarkMode, isAuthenticated, currentUser, setCurrentUser, setAuthenticated } = useAppStore();
   const navigate = useNavigate();
+  const { success } = useToast();
 
   const handleLogout = () => {
     setCurrentUser(null);
     setAuthenticated(false);
+    success('You have been logged out');
     navigate('/');
   };
 
@@ -36,7 +39,7 @@ const PublicHeader = () => {
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-4 text-sm text-gray-500 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400"
+              className="ml-4 text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400"
             >
               Built with bolt.new
             </a>
@@ -47,20 +50,20 @@ const PublicHeader = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shadow-sm"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
-                <Sun className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <Sun className="h-5 w-5 text-amber-500" />
               ) : (
-                <Moon className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+                <Moon className="h-5 w-5 text-blue-800" />
               )}
             </motion.button>
             
             {isAuthenticated && currentUser ? (
               <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
-                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">
+                <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+                  <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary text-xs font-bold border-2 border-primary-200">
                     {currentUser.name.substring(0, 2).toUpperCase()}
                   </div>
                   <span className="text-sm font-medium text-gray-800 dark:text-gray-300">
@@ -68,13 +71,25 @@ const PublicHeader = () => {
                   </span>
                 </div>
                 
-                <Button variant="outline" size="sm" onClick={handleDashboardClick} elevation={3}>
-                  <LayoutDashboard className="h-4 w-4 mr-1" />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleDashboardClick} 
+                  elevation={2}
+                  className="border-gray-300 bg-white text-gray-800"
+                >
+                  <LayoutDashboard className="h-4 w-4 mr-1 text-primary-600" />
                   Dashboard
                 </Button>
                 
-                <Button variant="ghost" size="sm" onClick={handleLogout}>
-                  <LogOut className="h-4 w-4 mr-1" />
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={handleLogout} 
+                  elevation={1}
+                  className="border-gray-300 bg-white text-gray-800"
+                >
+                  <LogOut className="h-4 w-4 mr-1 text-gray-700" />
                   Logout
                 </Button>
               </div>
@@ -82,10 +97,10 @@ const PublicHeader = () => {
               <Link to="/login">
                 <Button 
                   variant="primary" 
-                  className="flex items-center space-x-2 shadow-lg hover:shadow-xl"
                   elevation={3}
+                  className="flex items-center shadow-lg hover:shadow-xl"
                 >
-                  <LogIn className="h-5 w-5" />
+                  <LogIn className="h-5 w-5 mr-2" />
                   <span>Sign In</span>
                 </Button>
               </Link>

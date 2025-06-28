@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { Button } from '../ui/Button';
-import { LogIn, Moon, Sun, User, LayoutDashboard, LogOut } from 'lucide-react';
+import { LogIn, Moon, Sun, LayoutDashboard, LogOut } from 'lucide-react';
 
 const PublicHeader = () => {
   const { isDarkMode, toggleDarkMode, isAuthenticated, currentUser, setCurrentUser, setAuthenticated } = useAppStore();
@@ -24,7 +24,7 @@ const PublicHeader = () => {
   };
 
   return (
-    <header className="w-full bg-white dark:bg-gray-900 shadow-sm">
+    <header className="w-full bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center py-4">
           <div className="flex items-center">
@@ -47,7 +47,7 @@ const PublicHeader = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shadow-sm"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
@@ -59,16 +59,16 @@ const PublicHeader = () => {
             
             {isAuthenticated && currentUser ? (
               <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg">
-                  <div className="w-6 h-6 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary text-xs">
+                <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                  <div className="w-6 h-6 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold">
                     {currentUser.name.substring(0, 2).toUpperCase()}
                   </div>
-                  <span className="text-sm text-gray-700 dark:text-gray-300">
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-300">
                     {currentUser.name}
                   </span>
                 </div>
                 
-                <Button variant="outline" size="sm" onClick={handleDashboardClick}>
+                <Button variant="outline" size="sm" onClick={handleDashboardClick} elevation={3}>
                   <LayoutDashboard className="h-4 w-4 mr-1" />
                   Dashboard
                 </Button>
@@ -80,7 +80,11 @@ const PublicHeader = () => {
               </div>
             ) : (
               <Link to="/login">
-                <Button variant="primary" className="flex items-center space-x-2">
+                <Button 
+                  variant="primary" 
+                  className="flex items-center space-x-2 shadow-lg hover:shadow-xl"
+                  elevation={3}
+                >
                   <LogIn className="h-5 w-5" />
                   <span>Sign In</span>
                 </Button>

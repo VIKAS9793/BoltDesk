@@ -202,9 +202,10 @@ export const HomePage: React.FC = () => {
             >
               <Button
                 size="lg"
-                className="bg-white text-primary hover:bg-gray-100 h-14 px-8 text-base"
+                className="bg-white text-primary hover:bg-gray-100 h-14 px-8 text-base shadow-xl hover:shadow-2xl"
                 leftIcon={<Sparkles size={18} />}
                 onClick={handleVideoModal}
+                elevation={4}
               >
                 See How It Works
               </Button>
@@ -222,7 +223,7 @@ export const HomePage: React.FC = () => {
             {/* Stats */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16">
               <motion.div 
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-4"
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -231,7 +232,7 @@ export const HomePage: React.FC = () => {
                 <div className="text-sm text-white/80">Content Creators</div>
               </motion.div>
               <motion.div 
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-4"
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.7 }}
@@ -240,7 +241,7 @@ export const HomePage: React.FC = () => {
                 <div className="text-sm text-white/80">Active Subscribers</div>
               </motion.div>
               <motion.div 
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-4"
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.8 }}
@@ -249,7 +250,7 @@ export const HomePage: React.FC = () => {
                 <div className="text-sm text-white/80">Creator Satisfaction</div>
               </motion.div>
               <motion.div 
-                className="bg-white/10 backdrop-blur-sm rounded-lg p-4"
+                className="bg-white/10 backdrop-blur-sm rounded-lg p-4 shadow-lg"
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.9 }}
@@ -275,8 +276,8 @@ export const HomePage: React.FC = () => {
           </div>
           
           <div className="grid md:grid-cols-2 gap-8 lg:gap-16">
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-8">
-              <div className="h-16 w-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6">
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+              <div className="h-16 w-16 rounded-xl bg-primary/10 flex items-center justify-center mb-6 shadow-lg shadow-primary/20">
                 <Sparkles size={32} className="text-primary" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -310,16 +311,17 @@ export const HomePage: React.FC = () => {
               </ul>
               <Button
                 variant="primary"
-                className="mt-6"
+                className="mt-6 shadow-lg hover:shadow-xl"
                 rightIcon={<ArrowRight size={16} />}
                 onClick={handleJoinAsCreator}
+                elevation={3}
               >
                 Start Creating
               </Button>
             </div>
             
-            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-8">
-              <div className="h-16 w-16 rounded-xl bg-secondary/10 flex items-center justify-center mb-6">
+            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700">
+              <div className="h-16 w-16 rounded-xl bg-secondary/10 flex items-center justify-center mb-6 shadow-lg shadow-secondary/20">
                 <Users size={32} className="text-secondary" />
               </div>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
@@ -353,9 +355,10 @@ export const HomePage: React.FC = () => {
               </ul>
               <Button
                 variant="secondary"
-                className="mt-6"
+                className="mt-6 shadow-lg hover:shadow-xl"
                 rightIcon={<ArrowRight size={16} />}
                 onClick={handleBrowseContent}
+                elevation={3}
               >
                 Explore Content
               </Button>
@@ -372,8 +375,9 @@ export const HomePage: React.FC = () => {
               <Button
                 key={category.id}
                 variant={selectedCategory === category.id ? 'primary' : 'outline'}
-                className="whitespace-nowrap px-6 py-3 text-base"
+                className="whitespace-nowrap px-6 py-3 text-base shadow-md hover:shadow-lg"
                 onClick={() => handleCategoryFilter(category.id)}
+                elevation={2}
               >
                 {category.icon && <category.icon className="h-4 w-4 mr-2" />}
                 {category.name}
@@ -399,6 +403,8 @@ export const HomePage: React.FC = () => {
               variant="outline"
               rightIcon={<ArrowRight size={16} />}
               onClick={handleBrowseContent}
+              className="mt-4 md:mt-0 shadow-md hover:shadow-lg"
+              elevation={2}
             >
               View all content
             </Button>
@@ -408,8 +414,9 @@ export const HomePage: React.FC = () => {
             {featuredContent.map((content) => (
               <Card 
                 key={content.id} 
-                className="group overflow-hidden cursor-pointer hover:shadow-lg transition-all"
+                className="group overflow-hidden cursor-pointer hover:shadow-lg transition-all border border-gray-200 dark:border-gray-700"
                 onClick={() => handleContentClick(content.id)}
+                elevation={2}
               >
                 <div className="aspect-video w-full overflow-hidden bg-gray-200 dark:bg-gray-700 relative">
                   <img 
@@ -420,19 +427,20 @@ export const HomePage: React.FC = () => {
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
                     <Button
                       variant="outline"
-                      className="border-white text-white hover:bg-white hover:text-primary"
+                      className="border-white text-white hover:bg-white hover:text-primary shadow-lg"
                       leftIcon={<Play size={16} />}
+                      elevation={3}
                     >
                       Preview Course
                     </Button>
                   </div>
                   {content.access === 'premium' && (
-                    <div className="absolute top-2 right-2 bg-secondary text-white text-xs font-medium px-2 py-1 rounded-full">
+                    <div className="absolute top-2 right-2 bg-secondary text-white text-xs font-medium px-2 py-1 rounded-full shadow-lg">
                       Premium
                     </div>
                   )}
                   {content.access === 'nft' && (
-                    <div className="absolute top-2 right-2 bg-accent text-white text-xs font-medium px-2 py-1 rounded-full">
+                    <div className="absolute top-2 right-2 bg-accent text-white text-xs font-medium px-2 py-1 rounded-full shadow-lg">
                       NFT Exclusive
                     </div>
                   )}
@@ -446,12 +454,12 @@ export const HomePage: React.FC = () => {
                     </span>
                     <div className="flex-1" />
                     {content.access === 'free' ? (
-                      <span className="flex items-center text-green-600 dark:text-green-400 text-sm">
+                      <span className="flex items-center text-green-600 dark:text-green-400 text-sm font-medium">
                         <Unlock size={14} className="mr-1" />
                         Free
                       </span>
                     ) : (
-                      <span className="flex items-center text-primary text-sm">
+                      <span className="flex items-center text-primary text-sm font-medium">
                         <Lock size={14} className="mr-1" />
                         {content.access === 'premium' ? 'Premium' : 'NFT'}
                       </span>
@@ -468,19 +476,19 @@ export const HomePage: React.FC = () => {
 
                   <div className="grid grid-cols-2 gap-3 mb-3 text-sm">
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
-                      <Clock size={14} className="mr-1" />
+                      <Clock size={14} className="mr-1 text-gray-500" />
                       {content.duration}
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
-                      <BookOpen size={14} className="mr-1" />
+                      <BookOpen size={14} className="mr-1 text-gray-500" />
                       {content.lessons} lessons
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
-                      <Users size={14} className="mr-1" />
+                      <Users size={14} className="mr-1 text-gray-500" />
                       {content.students} students
                     </div>
                     <div className="flex items-center text-gray-600 dark:text-gray-400">
-                      <Star size={14} className="mr-1 text-yellow-400" />
+                      <Star size={14} className="mr-1 text-yellow-500" />
                       {content.rating} ({content.reviews})
                     </div>
                   </div>
@@ -499,12 +507,13 @@ export const HomePage: React.FC = () => {
                   <Button 
                     variant={content.access === 'free' ? 'primary' : 'outline'} 
                     size="sm"
-                    className="w-full"
+                    className="w-full shadow-md hover:shadow-lg"
                     rightIcon={<ArrowRight size={16} />}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleContentClick(content.id);
                     }}
+                    elevation={2}
                   >
                     {content.access === 'free' ? 'Start Learning' : 'Learn More'}
                   </Button>
@@ -527,17 +536,22 @@ export const HomePage: React.FC = () => {
                 Join our live sessions and workshops
               </p>
             </div>
-            <Button variant="outline" leftIcon={<Calendar size={16} />}>
+            <Button 
+              variant="outline" 
+              leftIcon={<Calendar size={16} />}
+              className="shadow-md hover:shadow-lg"
+              elevation={2}
+            >
               View Calendar
             </Button>
           </div>
 
           <div className="grid md:grid-cols-3 gap-6">
             {upcomingEvents.map((event) => (
-              <Card key={event.id} className="hover:shadow-lg transition-all">
+              <Card key={event.id} className="hover:shadow-lg transition-all" elevation={2}>
                 <CardContent className="p-5">
                   <div className="flex items-start gap-4">
-                    <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <div className="h-12 w-12 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary shadow-md">
                       <Calendar size={24} />
                     </div>
                     <div className="flex-1">
@@ -551,7 +565,7 @@ export const HomePage: React.FC = () => {
                         })} at {event.time}
                       </p>
                       <div className="flex items-center mt-2 text-sm text-gray-600 dark:text-gray-400">
-                        <Users size={14} className="mr-1" />
+                        <Users size={14} className="mr-1 text-gray-500" />
                         {event.participants} registered
                       </div>
                     </div>
@@ -559,8 +573,9 @@ export const HomePage: React.FC = () => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="w-full mt-4"
+                    className="w-full mt-4 shadow-sm hover:shadow-md"
                     onClick={() => handleEventRegister(event.id)}
+                    elevation={1}
                   >
                     Register Now
                   </Button>
@@ -580,9 +595,9 @@ export const HomePage: React.FC = () => {
                 <img 
                   src="/20240506_120440.jpg" 
                   alt="Vikas Sahani - Founder" 
-                  className="rounded-lg w-full max-w-lg mx-auto shadow-lg object-cover object-center"
+                  className="rounded-lg w-full max-w-lg mx-auto shadow-xl object-cover object-center border border-gray-200 dark:border-gray-700"
                 />
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full px-6 py-2 shadow-lg">
+                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 bg-white dark:bg-gray-800 rounded-full px-6 py-2 shadow-lg border border-gray-200 dark:border-gray-700">
                   <div className="flex items-center gap-4">
                     <div className="flex -space-x-2">
                       {[...Array(4)].map((_, i) => (
@@ -608,32 +623,32 @@ export const HomePage: React.FC = () => {
                 Meet Your Founder
               </h2>
               <div className="prose dark:prose-invert">
-                <p className="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-lg">
                   Hi there! I'm Vikas, the founder of this content platform with a vision to bring together creators and their audiences. 
                   With my background in finance and passion for AI technology, I've created a space where valuable content can be shared, discovered, and monetized effectively.
                 </p>
-                <p className="text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 mb-8 leading-relaxed text-lg">
                   My goal is to empower creators with the tools they need to reach their audience and build sustainable businesses. 
                   I believe in the power of AI to enhance content discovery and engagement, creating meaningful connections between creators and their communities.
                 </p>
               </div>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-                <div className="text-center">
+                <div className="text-center bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                   <div className="text-2xl font-bold text-primary">3+</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Years Experience</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-300">Years Experience</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                   <div className="text-2xl font-bold text-primary">50+</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Creator Partners</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-300">Creator Partners</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                   <div className="text-2xl font-bold text-primary">15k+</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Community Members</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-300">Community Members</div>
                 </div>
-                <div className="text-center">
+                <div className="text-center bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                   <div className="text-2xl font-bold text-primary">4.9</div>
-                  <div className="text-sm text-gray-600 dark:text-gray-400">Platform Rating</div>
+                  <div className="text-sm text-gray-700 dark:text-gray-300">Platform Rating</div>
                 </div>
               </div>
               
@@ -642,7 +657,7 @@ export const HomePage: React.FC = () => {
                   href="https://twitter.com/vikascreator" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors"
+                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600"
                 >
                   <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
@@ -653,7 +668,7 @@ export const HomePage: React.FC = () => {
                   href="https://instagram.com/vikascreator" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors"
+                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600"
                 >
                   <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path fillRule="evenodd" d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 015.45 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z" clipRule="evenodd" />
@@ -664,7 +679,7 @@ export const HomePage: React.FC = () => {
                   href="https://www.linkedin.com/in/vikas-sahani-727420358" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors"
+                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600"
                 >
                   <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M20.5 2h-17A1.5 1.5 0 002 3.5v17A1.5 1.5 0 003.5 22h17a1.5 1.5 0 001.5-1.5v-17A1.5 1.5 0 0020.5 2zM8 19H5v-9h3zM6.5 8.25A1.75 1.75 0 118.3 6.5a1.78 1.78 0 01-1.8 1.75zM19 19h-3v-4.74c0-1.42-.6-1.93-1.38-1.93A1.74 1.74 0 0013 14.19V19h-3v-9h2.9v1.3a3.11 3.11 0 012.7-1.4c1.55 0 3.36.86 3.36 3.66z" />
@@ -675,7 +690,7 @@ export const HomePage: React.FC = () => {
                   href="#" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors"
+                  className="inline-flex items-center text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 transition-colors bg-gray-50 dark:bg-gray-700 px-4 py-2 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600"
                 >
                   <svg className="h-5 w-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path fillRule="evenodd" d="M19.812 5.418c.861.23 1.538.907 1.768 1.768C21.998 8.746 22 12 22 12s0 3.255-.418 4.814a2.504 2.504 0 0 1-1.768 1.768c-1.56.419-7.814.419-7.814.419s-6.255 0-7.814-.419a2.505 2.505 0 0 1-1.768-1.768C2 15.255 2 12 2 12s0-3.255.417-4.814a2.507 2.507 0 0 1 1.768-1.768C5.744 5 11.998 5 11.998 5s6.255 0 7.814.418ZM15.194 12 10 15V9l5.194 3Z" clipRule="evenodd" />
@@ -699,15 +714,16 @@ export const HomePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Button
               size="lg"
-              className="bg-white text-accent-600 hover:bg-gray-100"
+              className="bg-white text-accent-600 hover:bg-gray-100 shadow-xl hover:shadow-2xl"
               onClick={handleJoinAsCreator}
+              elevation={4}
             >
               Join as Creator
             </Button>
             <Button
               size="lg"
               variant="outline"
-              className="border-white text-white hover:bg-white/10"
+              className="border-white text-white hover:bg-white/10 border-2"
               onClick={handleBrowseContent}
             >
               Browse Content
@@ -742,14 +758,14 @@ export const HomePage: React.FC = () => {
           <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
             Stay Updated
           </h3>
-          <p className="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">
+          <p className="text-gray-700 dark:text-gray-400 mb-6 max-w-md mx-auto">
             Get the latest updates on new creators, courses, and platform features.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
             <input
               type="email"
               placeholder="Enter your email"
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow-md"
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
                   handleNewsletterSignup((e.target as HTMLInputElement).value);
@@ -766,6 +782,8 @@ export const HomePage: React.FC = () => {
                   input.value = '';
                 }
               }}
+              className="shadow-lg hover:shadow-xl"
+              elevation={3}
             >
               Subscribe
             </Button>
@@ -775,19 +793,20 @@ export const HomePage: React.FC = () => {
 
       {/* Footer reference */}
       <div className="py-4 text-center text-sm text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/50">
-        Built with <a href="https://bolt.new" className="text-primary hover:text-primary-600" target="_blank" rel="noopener noreferrer">bolt.new</a>
+        Built with <a href="https://bolt.new" className="text-primary hover:text-primary-600 font-medium" target="_blank" rel="noopener noreferrer">bolt.new</a>
       </div>
 
       {/* Video Modal */}
       {isVideoModalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-3xl w-full">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-2xl max-w-3xl w-full">
             <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-              <h3 className="text-lg font-medium">BoltDesk: How It Works</h3>
+              <h3 className="text-lg font-medium text-gray-900 dark:text-white">BoltDesk: How It Works</h3>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setVideoModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
               >
                 <X className="h-5 w-5" />
               </Button>
@@ -796,7 +815,7 @@ export const HomePage: React.FC = () => {
               <div className="h-full flex items-center justify-center text-white">
                 <div className="text-center">
                   <Play className="h-16 w-16 mx-auto mb-4" />
-                  <p>Demo video coming soon!</p>
+                  <p className="text-lg">Demo video coming soon!</p>
                 </div>
               </div>
             </div>

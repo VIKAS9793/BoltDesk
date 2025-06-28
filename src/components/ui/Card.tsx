@@ -4,27 +4,40 @@ import { cn } from '../../lib/utils';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hover?: boolean;
+  elevation?: 1 | 2 | 3 | 4 | 5;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hover = true, ...props }, ref) => (
-    <motion.div
-      ref={ref}
-      className={cn(
-        "rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md", 
-        className
-      )}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      whileHover={hover ? { 
-        scale: 1.02,
-        boxShadow: "0 10px 30px -10px rgba(0,0,0,0.15)", 
-        transition: { type: "spring", stiffness: 300, damping: 20 }
-      } : undefined}
-      {...props}
-    />
-  )
+  ({ className, hover = true, elevation = 2, ...props }, ref) => {
+    // Map elevation to shadow classes (Google Material Design inspired)
+    const elevationClasses = {
+      1: 'shadow-sm',
+      2: 'shadow',
+      3: 'shadow-md',
+      4: 'shadow-lg',
+      5: 'shadow-xl'
+    };
+    
+    return (
+      <motion.div
+        ref={ref}
+        className={cn(
+          "rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800", 
+          elevationClasses[elevation],
+          className
+        )}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        whileHover={hover ? { 
+          scale: 1.02,
+          boxShadow: "0 10px 30px -10px rgba(0,0,0,0.15)", 
+          transition: { type: "spring", stiffness: 300, damping: 20 }
+        } : undefined}
+        {...props}
+      />
+    );
+  }
 );
 Card.displayName = "Card";
 
@@ -34,7 +47,7 @@ const CardHeader = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <motion.div
     ref={ref}
-    className={cn("p-6", className)}
+    className={cn("p-6 border-b border-gray-100 dark:border-gray-700", className)}
     initial={{ opacity: 0 }}
     animate={{ opacity: 1 }}
     transition={{ delay: 0.1 }}
@@ -94,7 +107,7 @@ const CardFooter = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <motion.div
     ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
+    className={cn("flex items-center p-6 pt-0 border-t border-gray-100 dark:border-gray-700", className)}
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ delay: 0.3 }}

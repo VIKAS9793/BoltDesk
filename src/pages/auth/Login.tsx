@@ -153,12 +153,12 @@ export const Login: React.FC = () => {
           Choose how you want to sign in
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
           <button
             onClick={() => handleRoleSelect('creator')}
-            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary hover:bg-primary/5 transition-all text-left"
+            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary/5 transition-all text-left shadow-lg hover:shadow-xl"
           >
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <div className="h-12 w-12 rounded-full bg-primary/20 flex items-center justify-center mb-4">
               <Crown className="h-6 w-6 text-primary" />
             </div>
             <h3 className="font-medium text-lg text-gray-900 dark:text-white mb-2">
@@ -171,9 +171,9 @@ export const Login: React.FC = () => {
           
           <button
             onClick={() => handleRoleSelect('consumer')}
-            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-secondary dark:hover:border-secondary hover:bg-secondary/5 transition-all text-left"
+            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-secondary hover:bg-secondary/5 transition-all text-left shadow-lg hover:shadow-xl"
           >
-            <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4">
+            <div className="h-12 w-12 rounded-full bg-secondary/20 flex items-center justify-center mb-4">
               <Users className="h-6 w-6 text-secondary" />
             </div>
             <h3 className="font-medium text-lg text-gray-900 dark:text-white mb-2">
@@ -194,7 +194,7 @@ export const Login: React.FC = () => {
         <Button
           variant="ghost"
           size="sm"
-          className="text-gray-600 dark:text-gray-400"
+          className="text-gray-700 dark:text-gray-400 border border-gray-200 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-800"
           onClick={() => setSelectedRole(null)}
           leftIcon={<ArrowLeft size={16} />}
         >
@@ -204,12 +204,12 @@ export const Login: React.FC = () => {
           {selectedRole === 'creator' ? (
             <>
               <Crown size={16} className="text-primary" />
-              Creator Login
+              <span className="font-medium">Creator Login</span>
             </>
           ) : (
             <>
               <Users size={16} className="text-secondary" />
-              Consumer Login
+              <span className="font-medium">Consumer Login</span>
             </>
           )}
         </div>
@@ -223,7 +223,7 @@ export const Login: React.FC = () => {
       </h2>
       
       {error && (
-        <div className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm">
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-3 rounded-md mb-4 text-sm border border-red-200 dark:border-red-800 shadow-md">
           {error}
         </div>
       )}
@@ -239,7 +239,7 @@ export const Login: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="your@email.com"
           />
         </div>
@@ -249,7 +249,7 @@ export const Login: React.FC = () => {
             <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
               Password
             </label>
-            <a href="#" className="text-sm text-primary hover:text-primary-600">
+            <a href="#" className="text-sm text-primary hover:text-primary-600 font-medium">
               Forgot password?
             </a>
           </div>
@@ -259,7 +259,7 @@ export const Login: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary"
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
             placeholder="••••••••"
           />
         </div>
@@ -280,8 +280,9 @@ export const Login: React.FC = () => {
           <Button
             type="submit"
             variant="primary"
-            className="w-full shadow-lg"
+            className="w-full shadow-lg hover:shadow-xl"
             isLoading={isLoading}
+            elevation={3}
           >
             Sign in
           </Button>
@@ -304,7 +305,7 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="w-full shadow-sm hover:shadow-md"
             onClick={() => handleSocialLoginClick('google')}
             isLoading={socialLoading === 'google'}
           >
@@ -332,7 +333,7 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="w-full shadow-sm hover:shadow-md"
             onClick={() => handleSocialLoginClick('twitter')}
             isLoading={socialLoading === 'twitter'}
           >
@@ -345,7 +346,7 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full"
+            className="w-full shadow-sm hover:shadow-md"
             onClick={() => handleSocialLoginClick('github')}
             isLoading={socialLoading === 'github'}
           >
@@ -367,16 +368,16 @@ export const Login: React.FC = () => {
       </div>
       
       {/* Demo account info */}
-      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md border border-blue-200 dark:border-blue-800">
-        <p className="text-sm text-gray-700 dark:text-gray-300">
-          <span className="font-medium">Demo credentials:</span>{' '}
+      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md border border-blue-200 dark:border-blue-800 shadow-md">
+        <p className="text-sm text-gray-800 dark:text-gray-200">
+          <span className="font-semibold">Demo credentials:</span>{' '}
           {selectedRole === 'creator' ? 'creator@example.com' : 'consumer@example.com'} / password
         </p>
       </div>
       
       {/* bolt.new reference */}
       <div className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400">
-        Built with <a href="https://bolt.new" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-600">bolt.new</a>
+        Built with <a href="https://bolt.new" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-600 font-medium">bolt.new</a>
       </div>
     </div>
   );

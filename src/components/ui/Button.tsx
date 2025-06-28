@@ -9,6 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
+  elevation?: 1 | 2 | 3 | 4;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -19,25 +20,34 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     isLoading = false,
     leftIcon,
     rightIcon,
+    elevation = 2,
     disabled,
     children,
     ...props
   }, ref) => {
-    // Enhanced styles for better visibility in light mode
+    // Google Material Design inspired elevation shadows
+    const elevationClasses = {
+      1: 'shadow-sm',
+      2: 'shadow',
+      3: 'shadow-md',
+      4: 'shadow-lg',
+    };
+    
+    // Enhanced styles with better contrast for light mode
     const variantStyles = {
-      primary: 'bg-primary text-white hover:bg-primary-600 shadow-md shadow-primary/30 hover:shadow-lg',
-      secondary: 'bg-secondary text-white hover:bg-secondary-600 shadow-md shadow-secondary/30 hover:shadow-lg',
-      accent: 'bg-accent text-white hover:bg-accent-600 shadow-md shadow-accent/30 hover:shadow-lg',
-      outline: 'border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm',
-      ghost: 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary',
-      destructive: 'bg-red-600 text-white hover:bg-red-700 shadow-md shadow-red-500/30 hover:shadow-lg'
+      primary: 'bg-primary text-white hover:bg-primary-600 active:bg-primary-700 shadow-lg shadow-primary/30 hover:shadow-xl',
+      secondary: 'bg-secondary text-white hover:bg-secondary-600 active:bg-secondary-700 shadow-lg shadow-secondary/30 hover:shadow-xl',
+      accent: 'bg-accent text-white hover:bg-accent-600 active:bg-accent-700 shadow-lg shadow-accent/30 hover:shadow-xl',
+      outline: 'border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:border-primary hover:text-primary hover:bg-primary/5',
+      ghost: 'text-gray-800 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary',
+      destructive: 'bg-red-600 text-white hover:bg-red-700 active:bg-red-800 shadow-lg shadow-red-500/30 hover:shadow-xl'
     };
     
     const sizeStyles = {
       sm: 'h-9 px-3 rounded-lg text-sm',
       md: 'h-10 px-4 py-2 rounded-lg',
-      lg: 'h-11 px-8 rounded-lg text-base font-medium',
-      icon: 'h-10 w-10 rounded-full p-0'
+      lg: 'h-12 px-8 rounded-lg text-base font-medium',
+      icon: 'h-10 w-10 rounded-xl p-0'
     };
 
     return (
@@ -49,6 +59,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           'btn inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
           variantStyles[variant],
           sizeStyles[size],
+          elevationClasses[elevation],
           isLoading && 'opacity-70 pointer-events-none',
           className
         )}
@@ -64,7 +75,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             {leftIcon}
           </span>
         )}
-        <span>
+        <span className="font-medium">
           {children}
         </span>
         {!isLoading && rightIcon && (

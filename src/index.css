@@ -4,6 +4,7 @@
 
 @layer base {
   :root {
+    /* Light mode colors with enhanced Google-style contrast */
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
     
@@ -13,33 +14,33 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
  
-    /* More vibrant primary color for light mode */
-    --primary: 220 85% 57%;
-    --primary-foreground: 210 40% 98%;
+    /* Google-style vibrant primary (blue) */
+    --primary: 224 90% 56%;
+    --primary-foreground: 0 0% 100%;
  
-    /* More vibrant secondary color for light mode */
-    --secondary: 262 85% 62%;
-    --secondary-foreground: 210 40% 98%;
+    /* Google-style vibrant secondary (purple) */
+    --secondary: 265 89% 65%;
+    --secondary-foreground: 0 0% 100%;
  
-    /* More vibrant accent color for light mode */
-    --accent: 172 75% 40%;
-    --accent-foreground: 210 40% 98%;
+    /* Google-style vibrant accent (teal) */
+    --accent: 174 84% 45%;
+    --accent-foreground: 0 0% 100%;
  
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
  
     --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --success: 142.1 76.2% 36.3%;
-    --success-foreground: 210 40% 98%;
+    --success: 142.1 76.2% 42%;
+    --success-foreground: 0 0% 100%;
 
     --warning: 38 92% 50%;
-    --warning-foreground: 210 40% 98%;
+    --warning-foreground: 0 0% 98%;
  
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --border: 240 6% 90%;
+    --input: 240 6% 90%;
+    --ring: 224 90% 56%;
  
     --radius: 1rem;
   }
@@ -127,12 +128,12 @@
 }
 
 @layer components {
-  /* Button Base */
+  /* Button Base with increased focus states */
   .btn {
     @apply inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
 
-  /* Button Variants with enhanced shadows and contrast for light mode */
+  /* Button Variants with enhanced Google-style shadows and contrast */
   .btn-primary {
     @apply bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-600 hover:shadow-xl hover:shadow-primary/40;
   }
@@ -149,8 +150,9 @@
     @apply bg-destructive text-white shadow-lg shadow-destructive/30 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/40;
   }
 
+  /* Outline button with more distinct border */
   .btn-outline {
-    @apply border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:border-primary hover:bg-primary/5 hover:text-primary shadow-sm;
+    @apply border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:border-primary hover:text-primary hover:bg-primary/5 shadow-sm;
   }
 
   .btn-ghost {
@@ -174,9 +176,9 @@
     @apply h-11 rounded-xl px-8 text-base;
   }
   
-  /* Card Styles with better shadows and borders for light mode */
+  /* Card Styles with Google-style elevation shadows */
   .card {
-    @apply rounded-2xl border border-gray-200 dark:border-gray-700 bg-card text-card-foreground shadow-md transition-all duration-200;
+    @apply rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-md hover:shadow-lg transition-all duration-200;
   }
 
   .card-header {
@@ -250,5 +252,39 @@
   
   .setup-wizard-services-grid {
     @apply grid grid-cols-1 md:grid-cols-2 gap-4;
+  }
+
+  /* Google-style Material Elevation */
+  .elevation-1 {
+    @apply shadow-sm;
+  }
+  
+  .elevation-2 {
+    @apply shadow;
+  }
+  
+  .elevation-3 {
+    @apply shadow-md;
+  }
+  
+  .elevation-4 {
+    @apply shadow-lg;
+  }
+  
+  .elevation-5 {
+    @apply shadow-xl;
+  }
+
+  /* Google-style color surfaces */
+  .surface-primary {
+    @apply bg-primary/10 text-primary border border-primary/20;
+  }
+  
+  .surface-secondary {
+    @apply bg-secondary/10 text-secondary border border-secondary/20;
+  }
+  
+  .surface-accent {
+    @apply bg-accent/10 text-accent border border-accent/20;
   }
 }

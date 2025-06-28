@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { 
   Home,
@@ -10,7 +10,8 @@ import {
   DollarSign, 
   Settings, 
   ChevronLeft,
-  LogOut
+  LogOut,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useToast } from '../../hooks/useToast';
@@ -21,7 +22,6 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: <Home size={20} />, label: 'Home', path: '/dashboard' },
   { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/dashboard' },
   { icon: <FileText size={20} />, label: 'Content', path: '/dashboard/content' },
   { icon: <Bot size={20} />, label: 'AI Agent', path: '/dashboard/ai' },
@@ -43,8 +43,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
     // Show success message
     success('Successfully logged out');
     
-    // Navigate to login page
-    navigate('/login');
+    // Navigate to main landing page
+    navigate('/');
   };
 
   return (
@@ -79,6 +79,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
             >
               <ChevronLeft size={20} />
             </Button>
+          </div>
+          
+          {/* Return to Main Site */}
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-primary"
+                leftIcon={<ArrowLeft size={16} />}
+              >
+                Back to Main Site
+              </Button>
+            </Link>
           </div>
           
           {/* Creator profile */}

@@ -1,15 +1,16 @@
 import React from 'react';
 import { useAppStore } from '../../store';
 import { Button } from '../ui/Button';
+import { Link } from 'react-router-dom';
 import { 
   Menu, 
   Bell, 
   Moon, 
   Sun, 
   ExternalLink,
-  Search
+  Search,
+  Home
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
 
 export const TopBar: React.FC = () => {
   const { 
@@ -23,7 +24,7 @@ export const TopBar: React.FC = () => {
 
   return (
     <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-10">
-      <div className="flex items-center">
+      <div className="flex items-center gap-4">
         <Button
           variant="ghost"
           size="icon"
@@ -33,6 +34,18 @@ export const TopBar: React.FC = () => {
         >
           <Menu size={20} />
         </Button>
+        
+        {/* Quick navigation to main site */}
+        <Link to="/">
+          <Button
+            variant="ghost"
+            size="sm"
+            leftIcon={<Home size={16} />}
+            className="hidden md:flex text-gray-600 dark:text-gray-400 hover:text-primary"
+          >
+            Main Site
+          </Button>
+        </Link>
         
         <div className="relative flex items-center max-w-md w-full">
           <Search className="absolute left-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-500 dark:text-gray-400" />
@@ -46,7 +59,7 @@ export const TopBar: React.FC = () => {
       
       <div className="flex items-center space-x-3">
         {/* Visit public portal button */}
-        <Link to="/" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center">
+        <Link to="/" className="text-sm font-medium text-gray-700 dark:text-gray-300 flex items-center hover:text-primary">
           <span className="hidden md:inline-block mr-1">View Portal</span>
           <ExternalLink size={16} />
         </Link>

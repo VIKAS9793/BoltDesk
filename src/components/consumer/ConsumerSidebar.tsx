@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, Link } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { 
   Home,
@@ -8,7 +8,9 @@ import {
   Heart,
   Settings,
   LogOut,
-  ChevronLeft
+  ChevronLeft,
+  Globe,
+  ArrowLeft
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { useToast } from '../../hooks/useToast';
@@ -19,8 +21,7 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: <Home size={20} />, label: 'Home', path: '/consumer' },
-  { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/consumer' },
+  { icon: <Home size={20} />, label: 'Dashboard', path: '/consumer' },
   { icon: <Library size={20} />, label: 'Content Library', path: '/consumer/library' },
   { icon: <Heart size={20} />, label: 'Favorites', path: '/consumer/favorites' },
   { icon: <Settings size={20} />, label: 'Settings', path: '/consumer/settings' },
@@ -39,8 +40,8 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
     // Show success message
     success('Successfully logged out');
     
-    // Navigate to login page
-    navigate('/login');
+    // Navigate to main landing page
+    navigate('/');
   };
 
   return (
@@ -75,6 +76,20 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
             >
               <ChevronLeft size={20} />
             </Button>
+          </div>
+          
+          {/* Return to Main Site */}
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <Link to="/">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-primary"
+                leftIcon={<ArrowLeft size={16} />}
+              >
+                Back to Main Site
+              </Button>
+            </Link>
           </div>
           
           {/* User profile */}

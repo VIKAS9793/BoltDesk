@@ -21,12 +21,18 @@ import { SettingsPage } from './pages/dashboard/SettingsPage';
 import LicensePage from './pages/public/LicensePage';
 import AboutPage from './pages/public/AboutPage';
 import HomePage from './pages/public/HomePage';
+import ContentDetails from './pages/public/ContentDetails';
 
 import { ConsumerDashboard } from './pages/consumer/ConsumerDashboard';
 import { ContentLibrary } from './pages/consumer/ContentLibrary';
 import { Favorites } from './pages/consumer/Favorites';
 import { Subscriptions } from './pages/consumer/Subscriptions';
 import { ConsumerSettings } from './pages/consumer/ConsumerSettings';
+
+// Legal & Support Pages
+import TermsOfService from './pages/legal/TermsOfService';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import FAQ from './pages/support/FAQ';
 
 function App() {
   const { isDarkMode } = useAppStore();
@@ -35,6 +41,7 @@ function App() {
   // Initialize dark mode from system preference
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
+    console.log('🎨 App: Setting dark mode to', isDarkMode);
   }, [isDarkMode]);
   
   return (
@@ -68,8 +75,14 @@ function App() {
         {/* Public Routes */}
         <Route element={<PublicPortalLayout />}>
           <Route path="/" element={<HomePage />} />
+          <Route path="/content/:id" element={<ContentDetails />} />
           <Route path="/license" element={<LicensePage />} />
           <Route path="/about" element={<AboutPage />} />
+          
+          {/* Legal & Support Pages */}
+          <Route path="/legal/terms" element={<TermsOfService />} />
+          <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+          <Route path="/support/faq" element={<FAQ />} />
         </Route>
         
         {/* Fallback redirect */}

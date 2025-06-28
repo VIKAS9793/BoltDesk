@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { useAppStore } from '../../store';
 import { Button } from '../ui/Button';
 import { useToast } from '../../hooks/useToast';
-import { LogIn, Moon, Sun, LayoutDashboard, LogOut, User, Menu, ChevronDown, X } from 'lucide-react';
+import { LogIn, Moon, Sun, LayoutDashboard, LogOut, User, Menu, ChevronDown, X, Home, Book, Info, HelpCircle } from 'lucide-react';
 
 const PublicHeader: React.FC = () => {
   const { isDarkMode, toggleDarkMode, isAuthenticated, currentUser, setCurrentUser, setAuthenticated } = useAppStore();
@@ -59,6 +59,13 @@ const PublicHeader: React.FC = () => {
     setShowMobileMenu(false);
   };
 
+  const navItems = [
+    { icon: Home, label: 'Home', path: '/' },
+    { icon: Book, label: 'Content', path: '/content/c1' },
+    { icon: Info, label: 'About', path: '/about' },
+    { icon: HelpCircle, label: 'FAQs', path: '/support/faq' },
+  ];
+
   return (
     <header className="fixed top-0 left-0 right-0 w-full z-50 bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -82,18 +89,16 @@ const PublicHeader: React.FC = () => {
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center gap-4">
             <nav className="flex items-center space-x-1 mr-2">
-              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                Home
-              </Link>
-              <Link to="/content/c1" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                Content
-              </Link>
-              <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                About
-              </Link>
-              <Link to="/support/faq" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
-                FAQs
-              </Link>
+              {navItems.map((item) => (
+                <Link 
+                  key={item.path}
+                  to={item.path} 
+                  className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors flex items-center"
+                >
+                  <item.icon className="w-4 h-4 mr-1.5" />
+                  {item.label}
+                </Link>
+              ))}
             </nav>
             
             {/* Theme toggle */}
@@ -227,30 +232,16 @@ const PublicHeader: React.FC = () => {
         {/* Mobile menu */}
         {showMobileMenu && (
           <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3 pb-4 space-y-1">
-            <Link 
-              to="/" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
-            >
-              Home
-            </Link>
-            <Link 
-              to="/content/c1" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
-            >
-              Content
-            </Link>
-            <Link 
-              to="/about" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
-            >
-              About
-            </Link>
-            <Link 
-              to="/support/faq" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
-            >
-              FAQs
-            </Link>
+            {navItems.map((item) => (
+              <Link 
+                key={item.path}
+                to={item.path} 
+                className="flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
+              >
+                <item.icon className="w-4 h-4 mr-2" />
+                {item.label}
+              </Link>
+            ))}
             
             {/* User actions on mobile */}
             {isAuthenticated && currentUser && (

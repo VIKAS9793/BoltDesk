@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Bot } from 'lucide-react';
 import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAppStore } from '../store';
 
 export const AuthLayout: React.FC = () => {
-  const { isAuthenticated } = useAppStore();
+  const { isAuthenticated, currentUser } = useAppStore();
   const location = useLocation();
 
-  if (isAuthenticated) {
-    // Redirect to dashboard if already authenticated
-    return <Navigate to="/dashboard" replace />;
+  // Debug logging
+  useEffect(() => {
+    console.log('AuthLayout - Mounted', { isAuthenticated, userRole: currentUser?.role });
+  }, [isAuthenticated, currentUser]);
+
+  // Redirect to appropriate dashboard if already authenticated
+  if (isAuthenticated && currentUser) {
+    const redirectPath = currentUser.role === 'creator' ? '/dashboard' : '/consumer';
+    console.log(`AuthLayout - Already authenticated as ${currentUser.role}, redirecting to ${redirectPath}`);
+    return <Navigate to={redirectPath} replace />;
   }
 
   return (
@@ -25,7 +32,7 @@ export const AuthLayout: React.FC = () => {
           </p>
         </div>
         
-        <div className="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8">
+        <div className="bg-white dark:bg-gray-800 shadow-xl rounded-lg p-8 border border-gray-200 dark:border-gray-700">
           <Outlet />
         </div>
         

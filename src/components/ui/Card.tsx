@@ -5,21 +5,32 @@ import { cn } from '../../lib/utils';
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hover?: boolean;
   variant?: 'default' | 'elevated' | 'outlined';
+  elevation?: number;
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hover = true, variant = 'default', children, ...props }, ref) => {
+  ({ className, hover = true, variant = 'default', children, elevation = 0, ...props }, ref) => {
     const baseClasses = "card";
     const variantClasses = {
       default: "",
       elevated: "shadow-lg",
       outlined: "border-2"
     };
+    
+    // Apply elevation shadow classes
+    const elevationClasses = {
+      0: '',
+      1: 'shadow-sm',
+      2: 'shadow',
+      3: 'shadow-md',
+      4: 'shadow-lg',
+      5: 'shadow-xl',
+    }[Math.min(elevation, 5)];
 
     return (
       <motion.div
         ref={ref}
-        className={cn(baseClasses, variantClasses[variant], className)}
+        className={cn(baseClasses, variantClasses[variant], elevationClasses, className)}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}

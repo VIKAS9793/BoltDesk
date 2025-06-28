@@ -15,7 +15,16 @@ export const useToast = () => {
     const id = Date.now().toString();
     const newToast = { ...toast, id };
     
+    // Log toast (helps with debugging)
+    console.log(`Toast: ${toast.type} - ${toast.message}`);
+    
     setToasts(prev => [...prev, newToast]);
+    
+    // Auto-remove toast after duration
+    if (toast.duration !== 0) {
+      const duration = toast.duration || 5000;
+      setTimeout(() => hideToast(id), duration);
+    }
   }, []);
 
   const hideToast = useCallback((id: string) => {

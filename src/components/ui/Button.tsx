@@ -10,6 +10,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
   fullWidth?: boolean;
+  elevation?: number;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -23,11 +24,22 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     disabled,
     children,
     fullWidth = false,
+    elevation = 0,
     ...props
   }, ref) => {
     const baseClass = 'btn';
     const variantClass = `btn-${variant}`;
     const sizeClass = `btn-${size}`;
+    
+    // Apply elevation shadow classes
+    const elevationClasses = {
+      0: '',
+      1: 'shadow-sm',
+      2: 'shadow',
+      3: 'shadow-md',
+      4: 'shadow-lg',
+      5: 'shadow-xl',
+    }[Math.min(elevation, 5)];
 
     return (
       <motion.button
@@ -39,6 +51,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           variantClass,
           sizeClass,
           fullWidth && 'w-full',
+          elevationClasses,
           (isLoading || disabled) && 'opacity-70 pointer-events-none',
           className
         )}

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronRight, ChevronLeft, Check, User, Bot, Video, MessageSquare, Calendar, ShoppingCart, GraduationCap as Graduation, Trophy, Rocket, BookOpen, Lightbulb, Mic, Sparkles, ArrowRight, Heart, Palette, AlertCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Player } from '@lottiefiles/react-lottie-player';
 import { useAppStore } from '../../store';
+import { useToast } from '../../hooks/useToast';
 
 interface SetupWizardProps {
   onComplete: () => void;
@@ -46,6 +47,7 @@ const serviceOptions = [
 
 export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) => {
   const { currentUser, setCurrentUser } = useAppStore();
+  const { info } = useToast();
   
   const [step, setStep] = useState(1);
   const [selectedNiche, setSelectedNiche] = useState<string | null>(null);
@@ -57,13 +59,26 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   const [portalName, setPortalName] = useState(currentUser?.portalName || '');
   const [isNarrating, setIsNarrating] = useState(false);
   
+  // Debug logs
+  useEffect(() => {
+    console.log("Step:", step);
+    console.log("Selected Niche:", selectedNiche);
+    console.log("Selected Avatar:", selectedAvatar);
+    console.log("Selected Services:", selectedServices);
+    console.log("Portal Name:", portalName);
+  }, [step, selectedNiche, selectedAvatar, selectedServices, portalName]);
+  
   const totalSteps = 4;
   
   const handleNext = () => {
     if (step < totalSteps) {
+      // Log the current step completion
+      console.log(`Completing step ${step}, moving to step ${step + 1}`);
+      info(`Step ${step} completed!`);
       setStep(step + 1);
     } else {
       // Final step completion - show loading animation
+      console.log("Starting final step completion");
       setIsGenerating(true);
       
       // Simulate portal generation with user data saving
@@ -84,6 +99,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onboardingCompleted: true
           };
           
+          console.log("Updating user with:", updatedUser);
           setCurrentUser(updatedUser);
         }
         
@@ -92,6 +108,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
       }, 3000);
       
       setTimeout(() => {
+        console.log("Setup complete, calling onComplete callback");
         onComplete();
       }, 5000);
     }
@@ -109,6 +126,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
     } else {
       setSelectedServices([...selectedServices, serviceId]);
     }
+    console.log(`Service ${serviceId} toggled`);
   };
   
   const toggleNarration = () => {
@@ -179,7 +197,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     className={`
                       p-4 rounded-xl cursor-pointer border-2 transition-all
                       ${selectedNiche === niche.id 
-                        ? 'border-primary bg-primary/10' 
+                        ? 'border-primary bg-primary/10 ring-2 ring-primary' 
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
                     `}
                     onClick={() => setSelectedNiche(niche.id)}
@@ -351,8 +369,8 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   className={`
                     p-4 rounded-xl cursor-pointer border-2 transition-all
                     ${selectedServices.includes(service.id) 
-                      ? 'border-primary bg-primary/10' 
-                      : 'border-gray-200 dark:border-gray-700'}
+                      ? 'border-primary bg-primary/10 ring-2 ring-primary' 
+                      : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
                   `}
                   onClick={() => toggleService(service.id)}
                 >
@@ -565,7 +583,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
           <Button 
             variant="primary" 
             size="lg" 
-            className="px-8"
+            className="px-8 bg-primary hover:bg-primary-600 text-white"
             leftIcon={<Rocket size={18} />}
             onClick={onComplete}
           >
@@ -579,7 +597,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full max-w-4xl">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">
           Create Your AI-Powered Creator Portal
@@ -588,6 +606,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
           variant="ghost"
           size="sm"
           onClick={onSkip}
+          className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
         >
           Skip
         </Button>
@@ -601,7 +620,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               <React.Fragment key={index}>
                 <div className="flex flex-col items-center">
                   <div 
-                    className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium
+                    className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-medium shadow-md
                       ${index + 1 < step 
                         ? 'bg-primary text-white' 
                         : index + 1 === step
@@ -647,7 +666,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleBack}
             leftIcon={<ChevronLeft size={16} />}
             disabled={step === 1}
-            className="bg-white dark:bg-gray-800 shadow-none hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="bg-white dark:bg-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Back
           </Button>
@@ -656,7 +675,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleNext}
             rightIcon={<ChevronRight size={16} />}
             disabled={!isStepComplete()}
-            className="shadow-md hover:shadow-lg"
+            className="shadow-md hover:shadow-lg bg-primary hover:bg-primary-600 text-white"
           >
             {step === totalSteps ? 'Create Portal' : 'Next'}
           </Button>

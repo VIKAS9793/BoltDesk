@@ -26,19 +26,19 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = 'btn inline-flex items-center justify-center font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50';
     
     const variantStyles = {
-      primary: 'btn-primary bg-primary text-white hover:bg-primary-600 shadow-sm',
-      secondary: 'btn-secondary bg-secondary text-white hover:bg-secondary-600 shadow-sm',
-      accent: 'btn-accent bg-accent text-white hover:bg-accent-600 shadow-sm',
-      outline: 'btn-outline border-2 border-gray-300 dark:border-gray-600 bg-transparent hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300',
-      ghost: 'btn-ghost hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300',
-      destructive: 'btn-destructive bg-red-600 text-white hover:bg-red-700'
+      primary: 'bg-primary text-white hover:bg-primary-600 shadow-md',
+      secondary: 'bg-secondary text-white hover:bg-secondary-600 shadow-md',
+      accent: 'bg-accent text-white hover:bg-accent-600 shadow-md',
+      outline: 'border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-sm',
+      ghost: 'hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300',
+      destructive: 'bg-red-600 text-white hover:bg-red-700 shadow-md'
     };
     
     const sizeStyles = {
-      sm: 'btn-sm h-9 px-3 rounded-lg text-sm',
-      md: 'btn-md h-10 px-4 py-2 rounded-lg',
-      lg: 'btn-lg h-11 px-8 rounded-lg text-base',
-      icon: 'btn-icon h-10 w-10 rounded-full p-0'
+      sm: 'h-9 px-3 rounded-lg text-sm',
+      md: 'h-10 px-4 py-2 rounded-lg',
+      lg: 'h-11 px-8 rounded-lg text-base',
+      icon: 'h-10 w-10 rounded-full p-0'
     };
 
     return (
@@ -61,7 +61,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
         )}
         {!isLoading && leftIcon && (
-          <span className="mr-2">
+          <span className="mr-2 flex-shrink-0">
             {leftIcon}
           </span>
         )}
@@ -69,7 +69,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           {children}
         </span>
         {!isLoading && rightIcon && (
-          <span className="ml-2">
+          <span className="ml-2 flex-shrink-0">
             {rightIcon}
           </span>
         )}

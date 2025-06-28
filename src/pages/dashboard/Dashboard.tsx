@@ -55,9 +55,15 @@ export const DashboardPage: React.FC = () => {
   const [showWizard, setShowWizard] = useState(false);
   const [isFirstVisit, setIsFirstVisit] = useState(false);
   
+  // Debug the user state
+  useEffect(() => {
+    console.log('Dashboard - Current User:', currentUser);
+  }, [currentUser]);
+  
   // Check if this is the first visit to show wizard automatically
   useEffect(() => {
     if (creator && !creator.onboardingCompleted) {
+      console.log('First visit detected, showing setup wizard');
       // Set a small delay to ensure everything is loaded
       const timer = setTimeout(() => {
         setIsFirstVisit(true);
@@ -78,6 +84,7 @@ export const DashboardPage: React.FC = () => {
         ...creator,
         onboardingCompleted: true
       };
+      console.log('Updating user with onboarding completed:', updatedUser);
       setCurrentUser(updatedUser);
       success('Setup completed! Your portal is now ready.');
       setIsFirstVisit(false);
@@ -157,7 +164,10 @@ export const DashboardPage: React.FC = () => {
                     variant="outline"
                     className="border-primary/20 hover:border-primary/40"
                     leftIcon={<Settings size={18} />}
-                    onClick={() => setShowWizard(true)}
+                    onClick={() => {
+                      setShowWizard(true);
+                      info('Opening setup wizard');
+                    }}
                   >
                     Setup Wizard
                   </Button>
@@ -484,7 +494,10 @@ export const DashboardPage: React.FC = () => {
                     <Button
                       variant="outline"
                       className="h-auto py-4 flex flex-col items-center justify-center gap-2"
-                      onClick={() => setShowWizard(true)}
+                      onClick={() => {
+                        setShowWizard(true);
+                        info('Opening setup wizard');
+                      }}
                     >
                       <Plus className="h-5 w-5 text-blue-500" />
                       <span>Create New Portal</span>

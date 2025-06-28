@@ -59,10 +59,10 @@ export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, on
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="fixed z-[101] inset-0 flex items-center justify-center p-4"
+            className="fixed z-[101] inset-0 flex items-center justify-center p-4 max-h-screen"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="w-full max-w-4xl relative">
+            <div className="w-full max-w-4xl max-h-[90vh] overflow-auto">
               {/* Close button */}
               <Button
                 variant="ghost"

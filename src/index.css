@@ -87,23 +87,21 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
   
-  /* Fix for modals and dialogs */
-  .fixed {
-    position: fixed !important;
+  /* Modal positioning classes */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 bg-black/50 backdrop-blur-sm;
   }
   
-  /* Higher z-index for modals */
-  .modal,
-  .modal-backdrop {
-    z-index: 100 !important;
+  .modal-container {
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-4;
   }
   
-  /* Modal positioning helpers */
   .modal-centered {
-    position: fixed !important;
-    top: 50% !important;
-    left: 50% !important;
-    transform: translate(-50%, -50%) !important;
+    @apply fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-[101];
+  }
+  
+  .modal-content {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-xl z-[102];
   }
 }
 
@@ -149,7 +147,7 @@
   }
 
   .btn-outline {
-    @apply border-2 border-input bg-background hover:bg-accent/5 hover:text-accent-foreground;
+    @apply border-2 border-input bg-background hover:bg-accent/5 hover:text-accent-foreground shadow-sm;
   }
 
   .btn-ghost {
@@ -198,16 +196,52 @@
     @apply flex items-center p-6 pt-0;
   }
   
-  /* Modal Styles */
-  .modal-container {
-    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+  /* Setup Wizard Styles */
+  .setup-wizard-container {
+    @apply fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm;
   }
   
-  .modal-backdrop {
-    @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-40;
+  .setup-wizard-content {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-xl z-[101] w-full max-w-4xl max-h-[90vh] overflow-auto;
   }
   
-  .modal-content {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden max-w-md w-full relative z-50;
+  .setup-wizard-header {
+    @apply p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center sticky top-0 bg-white dark:bg-gray-800 z-10;
+  }
+  
+  .setup-wizard-footer {
+    @apply p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between sticky bottom-0 bg-white dark:bg-gray-800 z-10;
+  }
+  
+  .setup-wizard-step {
+    @apply p-6;
+  }
+  
+  .setup-wizard-option {
+    @apply p-4 rounded-xl cursor-pointer border-2 transition-all hover:border-primary;
+  }
+  
+  .setup-wizard-option-selected {
+    @apply border-primary bg-primary/10 ring-2 ring-primary;
+  }
+  
+  .setup-wizard-progress {
+    @apply flex items-center justify-between px-6 pt-6;
+  }
+  
+  .setup-wizard-progress-step {
+    @apply flex flex-col items-center;
+  }
+  
+  .setup-wizard-progress-line {
+    @apply w-full h-1;
+  }
+  
+  .setup-wizard-avatar-grid {
+    @apply grid grid-cols-3 md:grid-cols-5 gap-4;
+  }
+  
+  .setup-wizard-services-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-4;
   }
 }

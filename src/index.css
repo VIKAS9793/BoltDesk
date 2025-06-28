@@ -13,13 +13,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
  
-    --primary: 221.2 83.2% 53.3%;
+    /* More vibrant primary color for light mode */
+    --primary: 220 85% 57%;
     --primary-foreground: 210 40% 98%;
  
-    --secondary: 262.1 83.3% 57.8%;
+    /* More vibrant secondary color for light mode */
+    --secondary: 262 85% 62%;
     --secondary-foreground: 210 40% 98%;
  
-    --accent: 172.4 68.7% 39.8%;
+    /* More vibrant accent color for light mode */
+    --accent: 172 75% 40%;
     --accent-foreground: 210 40% 98%;
  
     --muted: 240 4.8% 95.9%;
@@ -126,54 +129,54 @@
 @layer components {
   /* Button Base */
   .btn {
-    @apply inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium ring-offset-background transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
+    @apply inline-flex items-center justify-center whitespace-nowrap rounded-xl text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50;
   }
 
-  /* Button Variants */
+  /* Button Variants with enhanced shadows and contrast for light mode */
   .btn-primary {
-    @apply bg-primary text-primary-foreground shadow-md hover:bg-primary-700 hover:shadow-lg;
+    @apply bg-primary text-white shadow-lg shadow-primary/30 hover:bg-primary-600 hover:shadow-xl hover:shadow-primary/40;
   }
 
   .btn-secondary {
-    @apply bg-secondary text-secondary-foreground shadow-md hover:bg-secondary-700 hover:shadow-lg;
+    @apply bg-secondary text-white shadow-lg shadow-secondary/30 hover:bg-secondary-600 hover:shadow-xl hover:shadow-secondary/40;
   }
 
   .btn-accent {
-    @apply bg-accent text-accent-foreground shadow-md hover:bg-accent-700 hover:shadow-lg;
+    @apply bg-accent text-white shadow-lg shadow-accent/30 hover:bg-accent-600 hover:shadow-xl hover:shadow-accent/40;
   }
 
   .btn-destructive {
-    @apply bg-destructive text-destructive-foreground shadow-md hover:bg-destructive/90 hover:shadow-lg;
+    @apply bg-destructive text-white shadow-lg shadow-destructive/30 hover:bg-destructive/90 hover:shadow-xl hover:shadow-destructive/40;
   }
 
   .btn-outline {
-    @apply border-2 border-input bg-background hover:bg-accent/5 hover:text-accent-foreground shadow-sm;
+    @apply border-2 border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 hover:border-primary hover:bg-primary/5 hover:text-primary shadow-sm;
   }
 
   .btn-ghost {
-    @apply hover:bg-accent/5 hover:text-accent-foreground;
+    @apply text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-primary;
   }
 
   /* Button Sizes */
   .btn-icon {
-    @apply h-10 w-10 rounded-xl;
+    @apply h-10 w-10 rounded-xl p-2.5;
   }
 
   .btn-sm {
-    @apply h-9 rounded-lg px-3;
+    @apply h-9 rounded-lg px-3 text-sm;
   }
 
   .btn-md {
-    @apply h-10 px-4 py-2;
+    @apply h-10 px-4 py-2 text-sm;
   }
 
   .btn-lg {
-    @apply h-11 rounded-xl px-8;
+    @apply h-11 rounded-xl px-8 text-base;
   }
   
-  /* Card Styles */
+  /* Card Styles with better shadows and borders for light mode */
   .card {
-    @apply rounded-2xl border bg-card text-card-foreground shadow-sm transition-all duration-200;
+    @apply rounded-2xl border border-gray-200 dark:border-gray-700 bg-card text-card-foreground shadow-md transition-all duration-200;
   }
 
   .card-header {
@@ -181,11 +184,11 @@
   }
 
   .card-title {
-    @apply text-lg font-semibold leading-none tracking-tight;
+    @apply text-lg font-semibold leading-none tracking-tight text-gray-900 dark:text-white;
   }
 
   .card-description {
-    @apply text-sm text-muted-foreground;
+    @apply text-sm text-gray-600 dark:text-gray-400;
   }
 
   .card-content {
@@ -202,7 +205,7 @@
   }
   
   .setup-wizard-content {
-    @apply bg-white dark:bg-gray-800 rounded-xl shadow-xl z-[101] w-full max-w-4xl max-h-[90vh] overflow-auto;
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-2xl z-[101] w-full max-w-4xl max-h-[90vh] overflow-auto;
   }
   
   .setup-wizard-header {
@@ -218,11 +221,11 @@
   }
   
   .setup-wizard-option {
-    @apply p-4 rounded-xl cursor-pointer border-2 transition-all hover:border-primary;
+    @apply p-4 rounded-xl cursor-pointer border-2 border-gray-200 dark:border-gray-700 transition-all hover:border-primary;
   }
   
   .setup-wizard-option-selected {
-    @apply border-primary bg-primary/10 ring-2 ring-primary;
+    @apply border-primary bg-primary/10 ring-2 ring-primary shadow-md;
   }
   
   .setup-wizard-progress {
@@ -234,7 +237,11 @@
   }
   
   .setup-wizard-progress-line {
-    @apply w-full h-1;
+    @apply w-full h-1 bg-gray-200 dark:bg-gray-700;
+  }
+  
+  .setup-wizard-progress-line-active {
+    @apply w-full h-1 bg-primary;
   }
   
   .setup-wizard-avatar-grid {

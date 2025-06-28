@@ -68,7 +68,7 @@ export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, on
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="absolute top-4 right-4 z-10 bg-white/20 backdrop-blur-sm text-white rounded-full hover:bg-white/30"
+                className="absolute top-4 right-4 z-10 bg-white/30 backdrop-blur-sm text-gray-800 dark:text-white rounded-full hover:bg-white/40"
                 aria-label="Close setup wizard"
               >
                 <X className="h-5 w-5" />

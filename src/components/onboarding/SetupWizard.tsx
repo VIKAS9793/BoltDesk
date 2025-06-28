@@ -28,12 +28,12 @@ const avatarOptions = [
 ];
 
 const nicheOptions = [
-  { id: 'coach', label: 'Coach', icon: Trophy, color: 'text-amber-500' },
-  { id: 'educator', label: 'Educator', icon: Graduation, color: 'text-blue-500' },
-  { id: 'creator', label: 'Content Creator', icon: Video, color: 'text-purple-500' },
-  { id: 'consultant', label: 'Consultant', icon: Lightbulb, color: 'text-yellow-500' },
-  { id: 'founder', label: 'Startup Founder', icon: Rocket, color: 'text-red-500' },
-  { id: 'author', label: 'Author/Writer', icon: BookOpen, color: 'text-green-500' },
+  { id: 'coach', label: 'Coach', icon: Trophy, color: 'text-amber-500', bgColor: 'bg-amber-100' },
+  { id: 'educator', label: 'Educator', icon: Graduation, color: 'text-blue-500', bgColor: 'bg-blue-100' },
+  { id: 'creator', label: 'Content Creator', icon: Video, color: 'text-purple-500', bgColor: 'bg-purple-100' },
+  { id: 'consultant', label: 'Consultant', icon: Lightbulb, color: 'text-yellow-500', bgColor: 'bg-yellow-100' },
+  { id: 'founder', label: 'Startup Founder', icon: Rocket, color: 'text-red-500', bgColor: 'bg-red-100' },
+  { id: 'author', label: 'Author/Writer', icon: BookOpen, color: 'text-green-500', bgColor: 'bg-green-100' },
 ];
 
 const serviceOptions = [
@@ -175,7 +175,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                 type="text"
                 value={portalName}
                 onChange={(e) => setPortalName(e.target.value)}
-                className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white bg-white dark:bg-gray-700"
+                className="w-full px-4 py-2 rounded-xl border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-primary"
                 placeholder="E.g., Alex's Coding Academy"
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -195,15 +195,15 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.98 }}
                     className={`
-                      p-4 rounded-xl cursor-pointer border-2 transition-all
+                      p-4 rounded-xl cursor-pointer border-2 transition-all shadow-sm
                       ${selectedNiche === niche.id 
-                        ? 'border-primary bg-primary/10 ring-2 ring-primary' 
+                        ? 'border-primary bg-primary/10 ring-2 ring-primary shadow-md' 
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
                     `}
                     onClick={() => setSelectedNiche(niche.id)}
                   >
                     <div className="flex flex-col items-center text-center">
-                      <div className={`h-12 w-12 rounded-full ${selectedNiche === niche.id ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center mb-3`}>
+                      <div className={`h-12 w-12 rounded-full ${selectedNiche === niche.id ? 'bg-primary/20' : `${niche.bgColor} dark:bg-gray-800`} flex items-center justify-center mb-3`}>
                         <niche.icon className={`h-6 w-6 ${selectedNiche === niche.id ? 'text-primary' : niche.color}`} />
                       </div>
                       <span className="font-medium text-gray-900 dark:text-white">{niche.label}</span>
@@ -214,7 +214,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             </div>
             
             {(!portalName || !selectedNiche) && (
-              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center mt-4">
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center mt-4 border border-amber-200 dark:border-amber-800">
                 <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0" />
                 <p className="text-sm text-amber-800 dark:text-amber-300">
                   {!portalName && !selectedNiche 
@@ -227,7 +227,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </div>
             )}
             
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-6">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-6 border border-blue-200 dark:border-blue-800">
               <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
               <p className="text-sm text-blue-800 dark:text-blue-300">
                 Your niche helps us customize your AI assistant's knowledge, site templates, and service offerings to best fit your audience's needs.
@@ -261,9 +261,9 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     key={avatar.id}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`relative cursor-pointer rounded-lg overflow-hidden border-2 ${
+                    className={`relative cursor-pointer rounded-lg overflow-hidden border-2 shadow-md ${
                       selectedAvatar === avatar.id 
-                        ? 'border-primary ring-2 ring-primary' 
+                        ? 'border-primary ring-2 ring-primary shadow-primary/20' 
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                     onClick={() => setSelectedAvatar(avatar.id)}
@@ -277,7 +277,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     </div>
                     {selectedAvatar === avatar.id && (
                       <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
-                        <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
+                        <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center shadow-lg">
                           <Check className="h-5 w-5 text-white" />
                         </div>
                       </div>
@@ -295,7 +295,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                 id="voice-select"
                 value={selectedVoice}
                 onChange={(e) => setSelectedVoice(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 focus:ring-2 focus:ring-primary focus:border-primary"
               >
                 {voiceOptions.map((voice) => (
                   <option key={voice.id} value={voice.id}>
@@ -305,12 +305,18 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </select>
             </div>
             
-            <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
+            <div className="mt-4 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white">
                   Voice Preview
                 </h4>
-                <Button variant="outline" size="sm">Play Sample</Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="bg-white dark:bg-gray-800 text-primary border-primary/30 hover:bg-primary/5"
+                >
+                  Play Sample
+                </Button>
               </div>
               <div className="w-full bg-gray-200 dark:bg-gray-700 h-2 rounded-full overflow-hidden">
                 <motion.div 
@@ -328,7 +334,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             </div>
             
             {!selectedAvatar && (
-              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center">
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center border border-amber-200 dark:border-amber-800">
                 <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0" />
                 <p className="text-sm text-amber-800 dark:text-amber-300">
                   Please select an avatar to continue
@@ -336,7 +342,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </div>
             )}
             
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-4 border border-blue-200 dark:border-blue-800">
               <Mic className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
               <p className="text-sm text-blue-800 dark:text-blue-300">
                 Your AI assistant will use this voice and avatar to interact with your audience, making conversations more engaging and personal.
@@ -367,16 +373,16 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   className={`
-                    p-4 rounded-xl cursor-pointer border-2 transition-all
+                    p-4 rounded-xl cursor-pointer border-2 transition-all shadow-sm
                     ${selectedServices.includes(service.id) 
-                      ? 'border-primary bg-primary/10 ring-2 ring-primary' 
+                      ? 'border-primary bg-primary/10 ring-2 ring-primary shadow-md' 
                       : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
                   `}
                   onClick={() => toggleService(service.id)}
                 >
                   <div className="flex items-center">
                     <div className={`h-10 w-10 rounded-full ${selectedServices.includes(service.id) ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center mr-4`}>
-                      <service.icon className={`h-5 w-5 ${selectedServices.includes(service.id) ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
+                      <service.icon className={`h-5 w-5 ${selectedServices.includes(service.id) ? 'text-primary' : 'text-gray-600 dark:text-gray-400'}`} />
                     </div>
                     <div>
                       <h3 className="font-medium text-gray-900 dark:text-white">
@@ -388,7 +394,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     </div>
                     <div className="ml-auto">
                       {selectedServices.includes(service.id) ? (
-                        <div className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center">
+                        <div className="h-5 w-5 rounded-full bg-primary text-white flex items-center justify-center shadow-md">
                           <Check className="h-3 w-3" />
                         </div>
                       ) : (
@@ -401,7 +407,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             </div>
             
             {selectedServices.length === 0 && (
-              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center">
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center border border-amber-200 dark:border-amber-800">
                 <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0" />
                 <p className="text-sm text-amber-800 dark:text-amber-300">
                   Please select at least one service to continue
@@ -409,7 +415,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </div>
             )}
             
-            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-6">
+            <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-6 border border-blue-200 dark:border-blue-800">
               <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
               <div>
                 <p className="text-sm text-blue-800 dark:text-blue-300">
@@ -438,7 +444,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </p>
             </div>
             
-            <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+            <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden shadow-md">
               <div className="bg-primary/10 p-4 flex items-center border-b border-gray-200 dark:border-gray-700">
                 <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">
                   <Bot className="h-4 w-4 text-primary" />
@@ -449,7 +455,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </div>
               <div className="p-6 bg-white dark:bg-gray-800">
                 <div className="flex items-center gap-4 mb-6">
-                  <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-primary/20">
+                  <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-primary/20 shadow-md">
                     {selectedAvatar && (
                       <img 
                         src={avatarOptions.find(a => a.id === selectedAvatar)?.src || ''} 
@@ -476,7 +482,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     return (
                       <div 
                         key={serviceId}
-                        className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-700/30"
+                        className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-700/30 shadow-sm"
                       >
                         <div className="flex items-center gap-3">
                           <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -491,7 +497,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   })}
                 </div>
                 
-                <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-primary/5">
+                <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-primary/5 shadow-sm">
                   <div className="flex items-start gap-3">
                     <Bot className="h-6 w-6 text-primary mt-0.5" />
                     <div>
@@ -509,21 +515,21 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             
             {/* Quick Metrics Preview */}
             <div className="grid grid-cols-4 gap-4">
-              <div className="bg-primary/5 dark:bg-primary/10 rounded-lg p-3 text-center">
+              <div className="bg-primary/10 dark:bg-primary/10 rounded-lg p-3 text-center border border-primary/20 shadow-sm">
                 <div className="text-lg font-bold text-primary">24/7</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">Availability</div>
+                <div className="text-xs text-gray-700 dark:text-gray-300">Availability</div>
               </div>
-              <div className="bg-secondary/5 dark:bg-secondary/10 rounded-lg p-3 text-center">
+              <div className="bg-secondary/10 dark:bg-secondary/10 rounded-lg p-3 text-center border border-secondary/20 shadow-sm">
                 <div className="text-lg font-bold text-secondary">100%</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">AI Powered</div>
+                <div className="text-xs text-gray-700 dark:text-gray-300">AI Powered</div>
               </div>
-              <div className="bg-accent/5 dark:bg-accent/10 rounded-lg p-3 text-center">
+              <div className="bg-accent/10 dark:bg-accent/10 rounded-lg p-3 text-center border border-accent/20 shadow-sm">
                 <div className="text-lg font-bold text-accent">5+ mins</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">Saved/Visit</div>
+                <div className="text-xs text-gray-700 dark:text-gray-300">Saved/Visit</div>
               </div>
-              <div className="bg-amber-500/5 dark:bg-amber-500/10 rounded-lg p-3 text-center">
+              <div className="bg-amber-500/10 dark:bg-amber-500/10 rounded-lg p-3 text-center border border-amber-500/20 shadow-sm">
                 <div className="text-lg font-bold text-amber-500">30%</div>
-                <div className="text-xs text-gray-600 dark:text-gray-400">Conv. Rate</div>
+                <div className="text-xs text-gray-700 dark:text-gray-300">Conv. Rate</div>
               </div>
             </div>
           </motion.div>
@@ -583,7 +589,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
           <Button 
             variant="primary" 
             size="lg" 
-            className="px-8 bg-primary hover:bg-primary-600 text-white"
+            className="px-8 shadow-lg"
             leftIcon={<Rocket size={18} />}
             onClick={onComplete}
           >
@@ -597,16 +603,17 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full max-w-4xl">
-      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-        <h2 className="text-xl font-bold text-gray-900 dark:text-white">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full max-w-4xl border border-gray-200 dark:border-gray-700">
+      <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-800">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
+          <Sparkles className="mr-2 h-5 w-5 text-primary" />
           Create Your AI-Powered Creator Portal
         </h2>
         <Button
           variant="ghost"
           size="sm"
           onClick={onSkip}
-          className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
+          className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300"
         >
           Skip
         </Button>
@@ -625,12 +632,12 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                         ? 'bg-primary text-white' 
                         : index + 1 === step
                           ? 'bg-primary/10 text-primary border-2 border-primary'
-                          : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}
+                          : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400 border border-gray-200 dark:border-gray-600'}
                     `}
                   >
                     {index + 1 < step ? <Check size={14} /> : index + 1}
                   </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                  <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mt-1">
                     {index === 0 ? 'Basics' : 
                      index === 1 ? 'AI Persona' :
                      index === 2 ? 'Services' : 'Preview'}
@@ -660,13 +667,13 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
       </div>
       
       {!isGenerating && !portalReady && (
-        <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
+        <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-800">
           <Button
             variant="outline"
             onClick={handleBack}
             leftIcon={<ChevronLeft size={16} />}
             disabled={step === 1}
-            className="bg-white dark:bg-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700"
+            className="bg-white dark:bg-gray-800 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
           >
             Back
           </Button>
@@ -675,7 +682,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleNext}
             rightIcon={<ChevronRight size={16} />}
             disabled={!isStepComplete()}
-            className="shadow-md hover:shadow-lg bg-primary hover:bg-primary-600 text-white"
+            className="shadow-lg hover:shadow-xl"
           >
             {step === totalSteps ? 'Create Portal' : 'Next'}
           </Button>

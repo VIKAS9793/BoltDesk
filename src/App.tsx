@@ -28,6 +28,11 @@ import { Favorites } from './pages/consumer/Favorites';
 import { Subscriptions } from './pages/consumer/Subscriptions';
 import { ConsumerSettings } from './pages/consumer/ConsumerSettings';
 
+// New legal and support pages
+import TermsOfService from './pages/legal/TermsOfService';
+import PrivacyPolicy from './pages/legal/PrivacyPolicy';
+import FAQ from './pages/support/FAQ';
+
 function App() {
   const { isDarkMode, isAuthenticated, currentUser } = useAppStore();
   const { toasts, hideToast } = useToast();
@@ -78,6 +83,13 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/license" element={<LicensePage />} />
           <Route path="/about" element={<AboutPage />} />
+          
+          {/* Legal Routes */}
+          <Route path="/legal/terms" element={<TermsOfService />} />
+          <Route path="/legal/privacy" element={<PrivacyPolicy />} />
+          
+          {/* Support Routes */}
+          <Route path="/support/faq" element={<FAQ />} />
         </Route>
         
         {/* Root redirect */}

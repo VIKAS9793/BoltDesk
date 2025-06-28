@@ -52,7 +52,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
       {/* Mobile sidebar backdrop */}
       {isOpen && (
         <div 
-          className="md:hidden fixed inset-0 z-20 bg-black/50 transition-opacity" 
+          className="md:hidden fixed inset-0 z-20 bg-black/50 backdrop-blur-sm transition-opacity" 
           onClick={onToggle}
         />
       )}
@@ -68,7 +68,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
           <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center">
               <img src="/black_circle_360x360.png" alt="Bolt Logo" className="h-10 w-10 mr-2" />
-              <span className="font-bold text-lg">Consumer Portal</span>
+              <span className="font-bold text-lg text-gray-900 dark:text-white">Consumer Portal</span>
             </div>
             <Button 
               variant="ghost" 
@@ -98,7 +98,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
           {/* User profile */}
           <div className="p-4 border-b border-gray-200 dark:border-gray-700">
             <div className="flex items-center">
-              <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900 flex items-center justify-center text-primary">
+              <div className="w-10 h-10 rounded-full bg-secondary-100 dark:bg-secondary-900/30 flex items-center justify-center text-secondary border border-secondary-200 dark:border-secondary-800">
                 {currentUser?.avatar ? (
                   <img 
                     src={currentUser.avatar} 
@@ -106,7 +106,9 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
                     className="w-full h-full rounded-full object-cover" 
                   />
                 ) : (
-                  <span>{currentUser?.name.substring(0, 2).toUpperCase() || 'U'}</span>
+                  <span className="text-xs font-medium">
+                    {currentUser?.name?.substring(0, 2).toUpperCase() || 'VI'}
+                  </span>
                 )}
               </div>
               <div className="ml-3">
@@ -126,7 +128,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
                     className={({ isActive }) => `
                       flex items-center px-3 py-2 text-sm rounded-md transition-colors
                       ${isActive 
-                        ? 'bg-primary/10 text-primary font-medium' 
+                        ? 'bg-secondary/10 text-secondary font-medium' 
                         : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
                       }
                     `}
@@ -145,7 +147,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
             <Button
               variant="outline"
               size="sm"
-              className="w-full justify-start text-gray-700 dark:text-gray-300"
+              className="w-full justify-start text-gray-700 dark:text-gray-300 hover:text-red-600"
               leftIcon={<LogOut size={16} />}
               onClick={handleLogout}
             >

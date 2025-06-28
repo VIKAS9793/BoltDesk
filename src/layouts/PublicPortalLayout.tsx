@@ -4,6 +4,7 @@ import { useAppStore } from '../store';
 import { PublicHeader } from '../components/public/PublicHeader';
 import { PublicFooter } from '../components/public/PublicFooter';
 import { AIFloatingButton } from '../components/public/AIFloatingButton';
+import { Toaster } from 'sonner';
 
 export const PublicPortalLayout: React.FC = () => {
   const { isDarkMode } = useAppStore();
@@ -15,11 +16,12 @@ export const PublicPortalLayout: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-gray-50 dark:bg-gray-900">
       <PublicHeader />
-      <main className="flex-1">
+      <main className="flex-1 pt-16">
         <Outlet />
       </main>
       <AIFloatingButton />
       <PublicFooter />
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

@@ -9,10 +9,10 @@ import {
   Sun, 
   Search,
   Home,
-  ArrowLeft,
   User,
   Settings,
-  LogOut
+  LogOut,
+  ChevronDown
 } from 'lucide-react';
 import { useToast } from '../../hooks/useToast';
 
@@ -38,36 +38,36 @@ export const ConsumerTopBar: React.FC = () => {
   };
 
   return (
-    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-10 shadow-sm">
-      <div className="flex items-center gap-4">
+    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-10 shadow-md">
+      <div className="flex items-center gap-3">
         <Button
           variant="ghost"
           size="icon"
           onClick={toggleSidebar}
-          className="md:hidden mr-2"
+          className="md:hidden"
           aria-label="Toggle menu"
         >
           <Menu size={20} />
         </Button>
         
         {/* Quick navigation to main site */}
-        <Link to="/">
+        <Link to="/" className="hidden md:flex">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             leftIcon={<Home size={16} />}
-            className="hidden md:flex text-gray-700 dark:text-gray-300 hover:text-primary"
+            className="text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
           >
             Main Site
           </Button>
         </Link>
         
-        <div className="relative flex items-center max-w-md w-full">
+        <div className="relative flex items-center max-w-md w-full ml-2">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 dark:text-gray-400" />
           <input
             type="search"
             placeholder="Search courses..."
-            className="h-9 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white px-3 py-1 pl-9 text-sm shadow-sm transition-colors focus-visible:outline-none focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:text-white"
+            className="h-9 w-full rounded-md border border-gray-300 dark:border-gray-600 bg-white px-3 py-1 pl-9 text-sm shadow-sm transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white"
           />
         </div>
       </div>
@@ -105,22 +105,24 @@ export const ConsumerTopBar: React.FC = () => {
         <div className="relative">
           <Button
             variant="ghost"
-            size="icon"
-            className="h-9 w-9 rounded-full overflow-hidden bg-secondary-100 dark:bg-secondary-900/30 border-2 border-secondary-200 dark:border-secondary-700/50 text-secondary flex items-center justify-center shadow-sm"
-            aria-label="User menu"
+            className="flex items-center gap-2 h-9 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-700 shadow-sm"
             onClick={() => setShowUserMenu(!showUserMenu)}
           >
-            {currentUser?.avatar ? (
-              <img
-                src={currentUser.avatar}
-                alt={currentUser.name}
-                className="h-full w-full object-cover"
-              />
-            ) : (
-              <span className="text-xs font-medium">
-                {currentUser?.name.substring(0, 2).toUpperCase() || 'VI'}
-              </span>
-            )}
+            <div className="h-7 w-7 rounded-full overflow-hidden bg-secondary-100 dark:bg-secondary-900/30 border border-secondary-200 dark:border-secondary-700/50 text-secondary flex items-center justify-center">
+              {currentUser?.avatar ? (
+                <img
+                  src={currentUser.avatar}
+                  alt={currentUser.name}
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <span className="text-xs font-medium">
+                  {currentUser?.name.substring(0, 2).toUpperCase() || 'VI'}
+                </span>
+              )}
+            </div>
+            <span className="text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:block">{currentUser?.name?.split(' ')[0] || 'User'}</span>
+            <ChevronDown size={16} className={`text-gray-500 transition-transform ${showUserMenu ? 'rotate-180' : ''}`} />
           </Button>
           
           {/* User dropdown menu */}

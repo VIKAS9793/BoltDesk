@@ -197,4 +197,17 @@
   .card-footer {
     @apply flex items-center p-6 pt-0;
   }
+  
+  /* Modal Styles */
+  .modal-container {
+    @apply fixed inset-0 z-50 flex items-center justify-center p-4;
+  }
+  
+  .modal-backdrop {
+    @apply fixed inset-0 bg-black/70 backdrop-blur-sm z-40;
+  }
+  
+  .modal-content {
+    @apply bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden max-w-md w-full relative z-50;
+  }
 }

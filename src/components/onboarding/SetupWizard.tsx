@@ -55,6 +55,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   const [isGenerating, setIsGenerating] = useState(false);
   const [portalReady, setPortalReady] = useState(false);
   const [portalName, setPortalName] = useState(currentUser?.portalName || '');
+  const [isNarrating, setIsNarrating] = useState(false);
   
   const totalSteps = 4;
   
@@ -108,6 +109,10 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
     } else {
       setSelectedServices([...selectedServices, serviceId]);
     }
+  };
+  
+  const toggleNarration = () => {
+    setIsNarrating(!isNarrating);
   };
   
   const isStepComplete = () => {
@@ -574,7 +579,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   };
   
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden max-w-3xl w-full">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl overflow-hidden w-full">
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white">
           Create Your AI-Powered Creator Portal
@@ -642,7 +647,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleBack}
             leftIcon={<ChevronLeft size={16} />}
             disabled={step === 1}
-            className="bg-white dark:bg-gray-800"
+            className="bg-white dark:bg-gray-800 shadow-none hover:bg-gray-50 dark:hover:bg-gray-700"
           >
             Back
           </Button>
@@ -651,6 +656,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleNext}
             rightIcon={<ChevronRight size={16} />}
             disabled={!isStepComplete()}
+            className="shadow-md hover:shadow-lg"
           >
             {step === totalSteps ? 'Create Portal' : 'Next'}
           </Button>

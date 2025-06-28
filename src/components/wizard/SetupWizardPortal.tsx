@@ -43,40 +43,26 @@ export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, on
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop - full screen with high z-index */}
+          {/* Fixed fullscreen backdrop with high z-index */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100]"
             onClick={onClose}
-            style={{ 
-              position: 'fixed', 
-              top: 0, 
-              left: 0, 
-              right: 0, 
-              bottom: 0 
-            }}
           />
           
-          {/* Modal Container - Centered with even higher z-index */}
+          {/* Absolutely centered modal container */}
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.95 }}
             transition={{ duration: 0.3 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[60] w-full max-w-3xl p-4"
+            className="fixed z-[101] inset-0 flex items-center justify-center p-4"
             onClick={(e) => e.stopPropagation()}
-            style={{
-              position: 'fixed',
-              top: '50%',
-              left: '50%',
-              transform: 'translate(-50%, -50%)'
-            }}
           >
-            {/* Setup Wizard Component */}
-            <div className="relative">
+            <div className="w-full max-w-4xl relative">
               {/* Close button */}
               <Button
                 variant="ghost"

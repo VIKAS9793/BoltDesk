@@ -29,23 +29,23 @@ const PublicHeader = () => {
   return (
     <header className="w-full bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center py-4">
-          <div className="flex items-center">
-            <Link to="/" className="flex items-center space-x-2 text-xl font-bold text-gray-900 dark:text-white">
-              <img src="/black_circle_360x360.png" alt="Bolt Logo" className="h-16 w-16" />
+        <div className="flex justify-between items-center py-3">
+          <div className="flex items-center gap-4">
+            <Link to="/" className="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white">
+              <img src="/black_circle_360x360.png" alt="Bolt Logo" className="h-12 w-12" />
               <span>BoltDesk</span>
             </Link>
             <a
               href="https://bolt.new"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-4 text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400"
+              className="ml-2 text-sm text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary-400"
             >
               Built with bolt.new
             </a>
           </div>
           
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-4">
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
@@ -61,8 +61,8 @@ const PublicHeader = () => {
             </motion.button>
             
             {isAuthenticated && currentUser ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
+              <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700">
                   <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary text-xs font-bold border-2 border-primary-200">
                     {currentUser.name.substring(0, 2).toUpperCase()}
                   </div>
@@ -76,9 +76,9 @@ const PublicHeader = () => {
                   size="sm" 
                   onClick={handleDashboardClick} 
                   elevation={2}
-                  className="border-gray-300 bg-white text-gray-800"
+                  className="border-gray-300 bg-white text-gray-800 py-1.5 px-3"
+                  leftIcon={<LayoutDashboard className="h-4 w-4 mr-1.5 text-primary-600" />}
                 >
-                  <LayoutDashboard className="h-4 w-4 mr-1 text-primary-600" />
                   Dashboard
                 </Button>
                 
@@ -87,9 +87,9 @@ const PublicHeader = () => {
                   size="sm" 
                   onClick={handleLogout} 
                   elevation={1}
-                  className="border-gray-300 bg-white text-gray-800"
+                  className="border-gray-300 bg-white text-gray-800 py-1.5 px-3"
+                  leftIcon={<LogOut className="h-4 w-4 mr-1.5 text-gray-700" />}
                 >
-                  <LogOut className="h-4 w-4 mr-1 text-gray-700" />
                   Logout
                 </Button>
               </div>
@@ -98,9 +98,9 @@ const PublicHeader = () => {
                 <Button 
                   variant="primary" 
                   elevation={3}
-                  className="flex items-center shadow-lg hover:shadow-xl"
+                  className="flex items-center shadow-lg hover:shadow-xl py-2 px-4"
+                  leftIcon={<LogIn className="h-5 w-5 mr-2" />}
                 >
-                  <LogIn className="h-5 w-5 mr-2" />
                   <span>Sign In</span>
                 </Button>
               </Link>

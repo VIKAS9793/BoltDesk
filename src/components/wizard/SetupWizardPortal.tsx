@@ -58,18 +58,25 @@ export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, on
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[100]"
             onClick={onClose}
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
           />
           
-          {/* Modal */}
+          {/* Modal Container - Centered */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: -20, opacity: 0 }}
             transition={{ delay: 0.1 }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-full max-w-4xl p-4"
+            className="fixed left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-[101] w-full max-w-4xl max-h-[90vh] overflow-auto p-4"
             onClick={(e) => e.stopPropagation()}
+            style={{ 
+              position: 'fixed',
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
           >
             <div className="relative">
               {/* Close Button */}
@@ -77,13 +84,13 @@ export const SetupWizardPortal: React.FC<SetupWizardPortalProps> = ({ isOpen, on
                 variant="ghost"
                 size="icon"
                 onClick={onClose}
-                className="absolute top-4 right-4 z-10 bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full"
+                className="absolute top-4 right-4 z-[102] bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 rounded-full"
               >
                 <X className="h-5 w-5" />
               </Button>
               
               {/* Info badge */}
-              <div className="absolute top-4 left-4 z-10">
+              <div className="absolute top-4 left-4 z-[102]">
                 <div className="bg-white/20 backdrop-blur-sm text-white rounded-full py-1 px-3 text-sm flex items-center">
                   <Info size={14} className="mr-1" />
                   <span>{wizardCompleted ? 'Setup Complete' : 'Setup Portal'}</span>

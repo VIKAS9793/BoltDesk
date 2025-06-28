@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { Button } from '../../components/ui/Button';
 import { Creator, Audience } from '../../types';
-import { Bot, Crown, Users, ArrowLeft } from 'lucide-react';
+import { Crown, Users, ArrowLeft } from 'lucide-react';
 import { handleSocialLogin } from '../../utils/api';
 import { useToast } from '../../hooks/useToast';
 
@@ -101,13 +101,14 @@ export const Login: React.FC = () => {
         setCurrentUser(mockUser);
         setAuthenticated(true);
         
-        // Wait a moment for state to update
-        await new Promise(resolve => setTimeout(resolve, 100));
-        
+        // Show success message
         success('Successfully logged in as consumer!');
         
         console.log('🔄 Navigating to /consumer');
-        navigate('/consumer');
+        // Use a timeout to ensure state has been updated before navigation
+        setTimeout(() => {
+          navigate('/consumer');
+        }, 100);
         
       } else {
         const errorMsg = `Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`;
@@ -279,7 +280,7 @@ export const Login: React.FC = () => {
           <Button
             type="submit"
             variant="primary"
-            className="w-full"
+            className="w-full shadow-lg"
             isLoading={isLoading}
           >
             Sign in
@@ -366,7 +367,7 @@ export const Login: React.FC = () => {
       </div>
       
       {/* Demo account info */}
-      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md">
+      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-3 rounded-md border border-blue-200 dark:border-blue-800">
         <p className="text-sm text-gray-700 dark:text-gray-300">
           <span className="font-medium">Demo credentials:</span>{' '}
           {selectedRole === 'creator' ? 'creator@example.com' : 'consumer@example.com'} / password

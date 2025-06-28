@@ -40,25 +40,30 @@ interface AppState {
   setLoading: (isLoading: boolean) => void;
   addNotification: (notification: Omit<AppState['notifications'][0], 'id'>) => void;
   removeNotification: (id: string) => void;
+  resetState: () => void;
 }
+
+// Initial state values
+const initialState = {
+  currentUser: null,
+  isAuthenticated: false,
+  isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
+  creatorContent: [],
+  featuredContent: [],
+  aiAgentName: 'Vikas',
+  aiMessages: [],
+  isAIProcessing: false,
+  subscriptions: [],
+  isSidebarOpen: true,
+  currentView: 'dashboard' as const,
+  isLoading: false,
+  notifications: [],
+};
 
 export const useAppStore = create<AppState>()(
   persist(
     (set, get) => ({
-      // Initial state
-      currentUser: null,
-      isAuthenticated: false,
-      isDarkMode: window.matchMedia('(prefers-color-scheme: dark)').matches,
-      creatorContent: [],
-      featuredContent: [],
-      aiAgentName: 'Vikas',
-      aiMessages: [],
-      isAIProcessing: false,
-      subscriptions: [],
-      isSidebarOpen: true,
-      currentView: 'dashboard',
-      isLoading: false,
-      notifications: [],
+      ...initialState,
       
       // Actions
       setCurrentUser: (user) => {
@@ -94,6 +99,10 @@ export const useAppStore = create<AppState>()(
       removeNotification: (id) => set((state) => ({
         notifications: state.notifications.filter((item) => item.id !== id)
       })),
+      resetState: () => {
+        console.log('🔄 Store: Resetting to initial state');
+        set(initialState);
+      },
     }),
     {
       name: 'boltdesk-store',

@@ -1,15 +1,20 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent } from '../../components/ui/Card';
 import { Button } from '../../components/ui/Button';
 import { BookOpen, Star, Heart, Clock, ArrowRight, TrendingUp, Users, Video, Award } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { motion } from 'framer-motion';
+import { useToast } from '../../hooks/useToast';
 
 export const ConsumerDashboard: React.FC = () => {
   const { currentUser } = useAppStore();
+  const { info } = useToast();
 
-  console.log('ConsumerDashboard - Current user:', currentUser);
+  // Debug logging
+  useEffect(() => {
+    console.log('ConsumerDashboard - Current user:', currentUser);
+  }, [currentUser]);
 
   // Mock recommended content
   const recommendedContent = [
@@ -50,6 +55,10 @@ export const ConsumerDashboard: React.FC = () => {
     { id: 2, action: 'Started course', content: 'React Basics', time: '1 day ago' },
     { id: 3, action: 'Earned certificate', content: 'HTML & CSS Mastery', time: '3 days ago' },
   ];
+  
+  const handleContinueCourse = (contentId: string) => {
+    info(`Continuing course ${contentId}`);
+  };
 
   return (
     <div className="space-y-8">
@@ -68,15 +77,15 @@ export const ConsumerDashboard: React.FC = () => {
             Continue your learning journey and discover new content
           </p>
           <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="text-2xl font-bold text-primary">12</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Courses Enrolled</div>
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="text-2xl font-bold text-green-600">45h</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Hours Learned</div>
             </div>
-            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4">
+            <div className="bg-white/50 dark:bg-gray-800/50 rounded-lg p-4 shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="text-2xl font-bold text-purple-600">4.8</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Avg. Rating</div>
             </div>
@@ -212,6 +221,7 @@ export const ConsumerDashboard: React.FC = () => {
                         size="sm"
                         className={content.progress > 0 ? 'bg-primary' : 'bg-secondary'}
                         rightIcon={<ArrowRight size={16} />}
+                        onClick={() => handleContinueCourse(content.id)}
                       >
                         {content.progress > 0 ? 'Continue' : 'Start Learning'}
                       </Button>

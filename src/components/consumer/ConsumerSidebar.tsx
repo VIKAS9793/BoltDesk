@@ -9,7 +9,6 @@ import {
   Settings,
   LogOut,
   ChevronLeft,
-  Globe,
   ArrowLeft
 } from 'lucide-react';
 import { Button } from '../ui/Button';
@@ -33,6 +32,9 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
   const { success } = useToast();
 
   const handleLogout = () => {
+    // Log the action
+    console.log('🔄 Consumer logout triggered');
+    
     // Clear authentication state
     setCurrentUser(null);
     setAuthenticated(false);
@@ -41,6 +43,7 @@ export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) =>
     success('Successfully logged out');
     
     // Navigate to main landing page
+    console.log('🔄 Navigating to / after logout');
     navigate('/');
   };
 

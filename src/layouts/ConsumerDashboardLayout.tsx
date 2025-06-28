@@ -26,6 +26,7 @@ export const ConsumerDashboardLayout: React.FC = () => {
     console.log('Location:', location.pathname);
     console.log('isAuthenticated:', isAuthenticated);
     console.log('currentUser:', currentUser);
+    console.log('currentUser?.role:', currentUser?.role);
     console.log('=====================================');
   }, [location.pathname, isAuthenticated, currentUser]);
   

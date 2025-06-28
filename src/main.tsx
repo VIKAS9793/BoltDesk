@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import './index.css';
 
-// Debug script to capture startup errors
+// Debug wrapper to capture startup errors and provide debugging info
 const DebugWrapper = () => {
   useEffect(() => {
     const handleError = (event: ErrorEvent) => {
@@ -29,7 +29,7 @@ const DebugWrapper = () => {
     window.addEventListener('unhandledrejection', handleUnhandledRejection);
 
     // Debug info
-    console.log('Debug Info:', {
+    console.log('🔄 Debug Info:', {
       timestamp: new Date().toISOString(),
       userAgent: navigator.userAgent,
       viewport: {
@@ -53,6 +53,10 @@ const DebugWrapper = () => {
     </StrictMode>
   );
 };
+
+// Clear any existing console errors to start fresh
+console.clear();
+console.log('🚀 Application starting...');
 
 createRoot(document.getElementById('root')!).render(
   <DebugWrapper />

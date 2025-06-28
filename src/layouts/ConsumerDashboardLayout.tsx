@@ -5,7 +5,7 @@ import { ConsumerSidebar } from '../components/consumer/ConsumerSidebar';
 import { ConsumerTopBar } from '../components/consumer/ConsumerTopBar';
 import { Toaster } from 'sonner';
 
-export const ConsumerDashboardLayout: React.FC = () => {
+const ConsumerDashboardLayout: React.FC = () => {
   const { 
     isAuthenticated,
     currentUser,
@@ -18,8 +18,29 @@ export const ConsumerDashboardLayout: React.FC = () => {
     document.documentElement.classList.toggle('dark', isDarkMode);
   }, [isDarkMode]);
   
-  if (!isAuthenticated || currentUser?.role !== 'audience') {
+  // Debug logging
+  console.log('ConsumerDashboardLayout - Auth state:', { 
+    isAuthenticated, 
+    currentUser: currentUser ? {
+      id: currentUser.id,
+      name: currentUser.name,
+      role: currentUser.role
+    } : null 
+  });
+  
+  if (!isAuthenticated) {
+    console.log('Not authenticated, redirecting to login');
     return <Navigate to="/login" replace />;
+  }
+
+  if (!currentUser) {
+    console.log('No current user, redirecting to login');
+    return <Navigate to="/login" replace />;
+  }
+
+  if (currentUser.role !== 'audience') {
+    console.log('User role is not audience, redirecting to dashboard');
+    return <Navigate to="/dashboard" replace />;
   }
 
   return (
@@ -41,4 +62,4 @@ export const ConsumerDashboardLayout: React.FC = () => {
   );
 };
 
-export { ConsumerDashboardLayout as default };
+export default ConsumerDashboardLayout;

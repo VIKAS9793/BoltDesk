@@ -71,9 +71,10 @@ export const Login: React.FC = () => {
           }
         };
         
+        console.log('Setting creator user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
-        success('Successfully logged in!');
+        success('Successfully logged in as creator!');
         
         navigate('/dashboard');
       } else if (selectedRole === 'consumer' && email === 'consumer@example.com' && password === 'password') {
@@ -87,6 +88,7 @@ export const Login: React.FC = () => {
           subscriptionTier: 'free'
         };
         
+        console.log('Setting consumer user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
         success('Successfully logged in as consumer!');

@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAppStore } from './store';
+import { useToast } from './hooks/useToast';
+import { ToastContainer } from './components/ui/Toast';
 
 import { AuthLayout } from './layouts/AuthLayout';
 import CreatorDashboardLayout from './layouts/CreatorDashboardLayout';
@@ -28,6 +30,7 @@ import { ConsumerSettings } from './pages/consumer/ConsumerSettings';
 
 function App() {
   const { isDarkMode } = useAppStore();
+  const { toasts, hideToast } = useToast();
   
   // Initialize dark mode from system preference
   useEffect(() => {
@@ -70,8 +73,11 @@ function App() {
         </Route>
         
         {/* Root redirect */}
-        <Route path="*" element={<Navigate to="/\" replace />} />
-      </Routes> 
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+      
+      {/* Global Toast Container */}
+      <ToastContainer toasts={toasts} onClose={hideToast} />
     </BrowserRouter>
   );
 }

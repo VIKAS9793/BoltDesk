@@ -11,6 +11,8 @@ import {
   ExternalLink,
   RefreshCw
 } from 'lucide-react';
+import { getEntriLinks, triggerDeployment } from '../../utils/api';
+import { useToast } from '../../hooks/useToast';
 
 export const DomainSettingsPage: React.FC = () => {
   const [customDomain, setCustomDomain] = useState('');
@@ -19,36 +21,79 @@ export const DomainSettingsPage: React.FC = () => {
   const [copied, setCopied] = useState(false);
   const [entriLinks, setEntriLinks] = useState<{ [key: string]: string } | null>(null);
   const [isLoadingEntriLinks, setIsLoadingEntriLinks] = useState(false);
+  const [isDeploying, setIsDeploying] = useState(false);
+  const { success, error } = useToast();
   
   // Mock domain verification
-  const handleVerifyDomain = () => {
-    if (!customDomain) return;
+  const handleVerifyDomain = async () => {
+    if (!customDomain) {
+      error('Please enter a domain name');
+      return;
+    }
     
     setIsVerifying(true);
     setVerificationStatus('verifying');
     
-    // Simulate API call
-    setTimeout(() => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      const isValid = Math.random() > 0.3; // 70% success rate
+      
+      if (isValid) {
+        setVerificationStatus('success');
+        success('Domain verified successfully!');
+      } else {
+        setVerificationStatus('error');
+        error('Domain verification failed. Please check your DNS settings.');
+      }
+    } catch (err) {
+      setVerificationStatus('error');
+      error('An error occurred during verification');
+    } finally {
       setIsVerifying(false);
-      setVerificationStatus(Math.random() > 0.3 ? 'success' : 'error');
-    }, 2000);
+    }
   };
   
-  const handleCopyDnsRecord = () => {
-    navigator.clipboard.writeText('txt-record ENTRI-VERIFICATION=abc123xyz456');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopyDnsRecord = async () => {
+    try {
+      await navigator.clipboard.writeText('txt-record ENTRI-VERIFICATION=abc123xyz456');
+      setCopied(true);
+      success('DNS record copied to clipboard');
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      error('Failed to copy DNS record');
+    }
   };
   
   const handleGetEntriLinks = async () => {
     try {
       setIsLoadingEntriLinks(true);
-      const response = await getEntriLinks();
-      setEntriLinks(response);
+      const links = await getEntriLinks();
+      setEntriLinks(links);
+      success('Entri setup links loaded successfully');
+    } catch (err) {
+      error('Failed to load Entri setup links');
+      console.error("Error getting Entri links:", err);
+    } finally {
       setIsLoadingEntriLinks(false);
-    } catch (error) {
-      console.error("Error getting Entri links:", error);
-      setIsLoadingEntriLinks(false);
+    }
+  };
+
+  const handleRedeploy = async () => {
+    try {
+      setIsDeploying(true);
+      const result = await triggerDeployment();
+      
+      if (result.success) {
+        success('Deployment triggered successfully!');
+      } else {
+        error(result.error || 'Deployment failed');
+      }
+    } catch (err) {
+      error('Failed to trigger deployment');
+    } finally {
+      setIsDeploying(false);
     }
   };
   
@@ -89,10 +134,8 @@ export const DomainSettingsPage: React.FC = () => {
               variant="outline" 
               size="sm"
               leftIcon={<RefreshCw size={14} />}
-              onClick={() => {
-                // Handle redeployment logic
-                console.log('Triggering redeployment');
-              }}
+              onClick={handleRedeploy}
+              isLoading={isDeploying}
             >
               Redeploy Site
             </Button>
@@ -240,6 +283,7 @@ export const DomainSettingsPage: React.FC = () => {
                 size="sm"
                 className="w-full justify-between"
                 rightIcon={<ExternalLink size={14} />}
+                onClick={() => window.open('https://ionos.com', '_blank')}
               >
                 <span>IONOS Domain Management</span>
               </Button>

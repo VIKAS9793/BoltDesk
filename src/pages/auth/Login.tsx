@@ -4,6 +4,8 @@ import { useAppStore } from '../../store';
 import { Button } from '../../components/ui/Button';
 import { Creator, Audience } from '../../types';
 import { Bot, Crown, Users, ArrowLeft } from 'lucide-react';
+import { handleSocialLogin } from '../../utils/api';
+import { useToast } from '../../hooks/useToast';
 
 type UserRole = 'creator' | 'consumer' | null;
 
@@ -13,9 +15,11 @@ export const Login: React.FC = () => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [socialLoading, setSocialLoading] = useState<string | null>(null);
   
   const navigate = useNavigate();
-  const { setCurrentUser, setAuthenticated, addNotification } = useAppStore();
+  const { setCurrentUser, setAuthenticated } = useAppStore();
+  const { success, error: showError } = useToast();
   
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
@@ -69,10 +73,7 @@ export const Login: React.FC = () => {
         
         setCurrentUser(mockUser);
         setAuthenticated(true);
-        addNotification({ 
-          message: 'Successfully logged in!', 
-          type: 'success' 
-        });
+        success('Successfully logged in!');
         
         navigate('/dashboard');
       } else if (selectedRole === 'consumer' && email === 'consumer@example.com' && password === 'password') {
@@ -88,10 +89,7 @@ export const Login: React.FC = () => {
         
         setCurrentUser(mockUser);
         setAuthenticated(true);
-        addNotification({ 
-          message: 'Successfully logged in as consumer!', 
-          type: 'success' 
-        });
+        success('Successfully logged in as consumer!');
         
         navigate('/consumer');
       } else {
@@ -102,6 +100,25 @@ export const Login: React.FC = () => {
       console.error(err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleSocialLoginClick = async (provider: 'google' | 'twitter' | 'github') => {
+    setSocialLoading(provider);
+    
+    try {
+      const result = await handleSocialLogin(provider);
+      
+      if (result.success) {
+        success(`Successfully connected with ${provider}!`);
+        // In a real app, you would handle the token and create user session
+      } else {
+        showError(result.error || `${provider} login failed`);
+      }
+    } catch (err) {
+      showError(`Failed to connect with ${provider}`);
+    } finally {
+      setSocialLoading(null);
     }
   };
   
@@ -268,7 +285,8 @@ export const Login: React.FC = () => {
             type="button"
             variant="outline"
             className="w-full"
-            onClick={() => console.log('Google login')}
+            onClick={() => handleSocialLoginClick('google')}
+            isLoading={socialLoading === 'google'}
           >
             <span className="sr-only">Sign in with Google</span>
             <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
@@ -295,7 +313,8 @@ export const Login: React.FC = () => {
             type="button"
             variant="outline"
             className="w-full"
-            onClick={() => console.log('Twitter login')}
+            onClick={() => handleSocialLoginClick('twitter')}
+            isLoading={socialLoading === 'twitter'}
           >
             <span className="sr-only">Sign in with Twitter</span>
             <svg className="h-5 w-5 text-[#1DA1F2]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -307,7 +326,8 @@ export const Login: React.FC = () => {
             type="button"
             variant="outline"
             className="w-full"
-            onClick={() => console.log('GitHub login')}
+            onClick={() => handleSocialLoginClick('github')}
+            isLoading={socialLoading === 'github'}
           >
             <span className="sr-only">Sign in with GitHub</span>
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { 
   Home,
@@ -11,6 +11,7 @@ import {
   ChevronLeft
 } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { useToast } from '../../hooks/useToast';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -26,11 +27,20 @@ const navItems = [
 ];
 
 export const ConsumerSidebar: React.FC<SidebarProps> = ({ isOpen, onToggle }) => {
-  const { currentUser } = useAppStore();
+  const { currentUser, setCurrentUser, setAuthenticated } = useAppStore();
+  const navigate = useNavigate();
+  const { success } = useToast();
 
   const handleLogout = () => {
-    // Logout implementation
-    console.log('Logging out...');
+    // Clear authentication state
+    setCurrentUser(null);
+    setAuthenticated(false);
+    
+    // Show success message
+    success('Successfully logged out');
+    
+    // Navigate to login page
+    navigate('/login');
   };
 
   return (

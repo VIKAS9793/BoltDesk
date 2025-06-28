@@ -51,8 +51,6 @@ export const ConsumerDashboardLayout: React.FC = () => {
     return <Navigate to="/login" replace />;
   }
 
-  console.log('✅ All checks passed, rendering ConsumerDashboardLayout');
-
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <div className="flex h-screen overflow-hidden">
@@ -67,7 +65,7 @@ export const ConsumerDashboardLayout: React.FC = () => {
           </main>
         </div>
       </div>
-      <Toaster position="top-right" closeButton />
+      <Toaster position="top-right" closeButton richColors />
     </div>
   );
 };

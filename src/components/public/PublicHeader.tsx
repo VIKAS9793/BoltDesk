@@ -56,10 +56,11 @@ const PublicHeader: React.FC = () => {
       navigate('/consumer');
     }
     setShowUserMenu(false);
+    setShowMobileMenu(false);
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
+    <header className="fixed top-0 left-0 right-0 w-full z-50 bg-white dark:bg-gray-800 shadow-md border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo and Brand */}
@@ -81,16 +82,16 @@ const PublicHeader: React.FC = () => {
           {/* Desktop navigation */}
           <div className="hidden md:flex items-center gap-4">
             <nav className="flex items-center space-x-1 mr-2">
-              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 text-sm font-medium rounded-md transition-colors">
+              <Link to="/" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
                 Home
               </Link>
-              <Link to="/content/c1" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 text-sm font-medium rounded-md transition-colors">
+              <Link to="/content/c1" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
                 Content
               </Link>
-              <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 text-sm font-medium rounded-md transition-colors">
+              <Link to="/about" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
                 About
               </Link>
-              <Link to="/support/faq" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 text-sm font-medium rounded-md transition-colors">
+              <Link to="/support/faq" className="text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 text-sm font-medium rounded-md transition-colors">
                 FAQs
               </Link>
             </nav>
@@ -100,7 +101,7 @@ const PublicHeader: React.FC = () => {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shadow-md border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 shadow-md border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300"
               aria-label="Toggle dark mode"
             >
               {isDarkMode ? (
@@ -116,7 +117,7 @@ const PublicHeader: React.FC = () => {
                 <button
                   ref={buttonRef}
                   onClick={() => setShowUserMenu(!showUserMenu)}
-                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-800 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 text-gray-800 dark:text-gray-200"
+                  className="flex items-center gap-2 px-3 py-2 bg-gray-100 dark:bg-gray-700 rounded-lg shadow-md border border-gray-200 dark:border-gray-600 text-gray-800 dark:text-gray-200"
                 >
                   <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary text-xs font-bold border-2 border-primary-200 dark:border-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
                     {currentUser.name.substring(0, 2).toUpperCase()}
@@ -183,7 +184,7 @@ const PublicHeader: React.FC = () => {
             {/* Theme toggle for mobile */}
             <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600"
               aria-label={isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {isDarkMode ? <Sun size={18} className="text-amber-500" /> : <Moon size={18} className="text-blue-700" />}
@@ -215,7 +216,7 @@ const PublicHeader: React.FC = () => {
             {/* Menu toggle button */}
             <button
               onClick={() => setShowMobileMenu(!showMobileMenu)}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700"
+              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-200 dark:border-gray-600"
               aria-label={showMobileMenu ? "Close menu" : "Open menu"}
             >
               {showMobileMenu ? <X size={20} /> : <Menu size={20} />}
@@ -228,25 +229,25 @@ const PublicHeader: React.FC = () => {
           <div className="md:hidden border-t border-gray-200 dark:border-gray-700 py-3 pb-4 space-y-1">
             <Link 
               to="/" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md font-medium"
+              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
             >
               Home
             </Link>
             <Link 
               to="/content/c1" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md font-medium"
+              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
             >
               Content
             </Link>
             <Link 
               to="/about" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md font-medium"
+              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
             >
               About
             </Link>
             <Link 
               to="/support/faq" 
-              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md font-medium"
+              className="block text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md font-medium"
             >
               FAQs
             </Link>
@@ -262,7 +263,7 @@ const PublicHeader: React.FC = () => {
                 </div>
                 <button 
                   onClick={handleDashboardClick}
-                  className="w-full text-left flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 px-3 py-2 rounded-md"
+                  className="w-full text-left flex items-center text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 px-3 py-2 rounded-md"
                 >
                   <LayoutDashboard size={16} className="mr-2 text-gray-500 dark:text-gray-400" />
                   Dashboard
@@ -279,10 +280,49 @@ const PublicHeader: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* User dropdown for mobile (fixed position) */}
+      {showUserMenu && isAuthenticated && (
+        <div 
+          className="md:hidden fixed top-16 right-4 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700 overflow-hidden"
+          ref={userMenuRef}
+        >
+          <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
+            <p className="font-medium text-gray-900 dark:text-white text-sm">{currentUser?.name}</p>
+            <p className="text-xs text-gray-600 dark:text-gray-400 truncate">{currentUser?.email}</p>
+          </div>
+          <div className="py-1">
+            <button 
+              onClick={handleDashboardClick}
+              className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <LayoutDashboard size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
+              Dashboard
+            </button>
+            <button 
+              onClick={() => {
+                navigate(`/${currentUser?.role === 'creator' ? 'dashboard' : 'consumer'}/settings`);
+                setShowUserMenu(false);
+              }}
+              className="flex w-full text-left px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
+            >
+              <User size={16} className="inline mr-2 text-gray-500 dark:text-gray-400" />
+              Profile
+            </button>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
+            <button 
+              onClick={handleLogout}
+              className="flex w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20"
+            >
+              <LogOut size={16} className="inline mr-2 text-red-500" />
+              Logout
+            </button>
+          </div>
+        </div>
+      )}
     </header>
   );
 };
 
 export default PublicHeader;
-
 export { PublicHeader };

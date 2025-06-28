@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { Button } from '../../components/ui/Button';
@@ -18,8 +18,13 @@ export const Login: React.FC = () => {
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   
   const navigate = useNavigate();
-  const { setCurrentUser, setAuthenticated } = useAppStore();
+  const { setCurrentUser, setAuthenticated, isAuthenticated, currentUser } = useAppStore();
   const { success, error: showError } = useToast();
+  
+  // Debug auth state
+  useEffect(() => {
+    console.log('Login Page - Auth State:', { isAuthenticated, currentUser });
+  }, [isAuthenticated, currentUser]);
   
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
@@ -32,6 +37,7 @@ export const Login: React.FC = () => {
     setIsLoading(true);
     
     try {
+      console.log(`Attempting to login as ${selectedRole} with email: ${email}`);
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       if (selectedRole === 'creator' && email === 'creator@example.com' && password === 'password') {
@@ -71,10 +77,12 @@ export const Login: React.FC = () => {
           }
         };
         
+        console.log('Setting creator user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
         success('Successfully logged in!');
         
+        console.log('Navigating to /dashboard');
         navigate('/dashboard');
       } else if (selectedRole === 'consumer' && email === 'consumer@example.com' && password === 'password') {
         const mockUser: Audience = {
@@ -87,17 +95,19 @@ export const Login: React.FC = () => {
           subscriptionTier: 'free'
         };
         
+        console.log('Setting consumer user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
         success('Successfully logged in as consumer!');
         
+        console.log('Navigating to /consumer');
         navigate('/consumer');
       } else {
         setError(`Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`);
       }
     } catch (err) {
+      console.error('Login error:', err);
       setError('An error occurred during login. Please try again.');
-      console.error(err);
     } finally {
       setIsLoading(false);
     }

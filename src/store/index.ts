@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { Creator, Audience, Content, AIMessage, Subscription } from '../types';
 
 interface AppState {
@@ -101,11 +101,14 @@ export const useAppStore = create<AppState>()(
       })),
       resetState: () => {
         console.log('🔄 Store: Resetting to initial state');
-        set(initialState);
+        // Reset everything except dark mode preference
+        const darkMode = get().isDarkMode;
+        set({ ...initialState, isDarkMode: darkMode });
       },
     }),
     {
       name: 'boltdesk-store',
+      storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         currentUser: state.currentUser,
         isAuthenticated: state.isAuthenticated,

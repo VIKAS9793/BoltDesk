@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bot, X, Mic, Video, Send } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/Button';
@@ -18,7 +18,7 @@ export const AIFloatingButton: React.FC = () => {
         id: Date.now().toString(),
         senderType: 'ai',
         senderId: 'ai-agent',
-        message: `Hi there! I'm ${aiAgentName}, your AI assistant. How can I help you today?`,
+        message: `Hi there! I'm ${aiAgentName || 'your AI assistant'}. How can I help you today?`,
         timestamp: new Date()
       });
     }
@@ -59,7 +59,7 @@ export const AIFloatingButton: React.FC = () => {
         <Button
           onClick={toggleChat}
           className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary-600 text-white"
-          aria-label={isOpen ? 'Close chat' : 'Open chat'}
+          aria-label={isOpen ? "Close chat" : "Open chat"}
         >
           {isOpen ? <X size={24} /> : <Bot size={24} />}
         </Button>
@@ -80,7 +80,7 @@ export const AIFloatingButton: React.FC = () => {
             <div className="p-4 bg-primary text-white flex items-center justify-between">
               <div className="flex items-center">
                 <Bot className="h-5 w-5 mr-2" />
-                <h3 className="font-medium">{aiAgentName}</h3>
+                <h3 className="font-medium">{aiAgentName || 'AI Assistant'}</h3>
               </div>
               <div className="flex space-x-1">
                 <Button
@@ -143,7 +143,7 @@ export const AIFloatingButton: React.FC = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Type your message..."
-                className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-primary dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                className="flex-1 border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary dark:bg-gray-700 dark:text-white dark:border-gray-600"
               />
               <Button
                 type="submit"

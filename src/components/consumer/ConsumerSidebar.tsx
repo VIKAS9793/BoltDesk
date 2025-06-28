@@ -20,7 +20,7 @@ interface SidebarProps {
 }
 
 const navItems = [
-  { icon: <Home size={20} />, label: 'Dashboard', path: '/consumer' },
+  { icon: <LayoutDashboard size={20} />, label: 'Dashboard', path: '/consumer' },
   { icon: <Library size={20} />, label: 'Content Library', path: '/consumer/library' },
   { icon: <Heart size={20} />, label: 'Favorites', path: '/consumer/favorites' },
   { icon: <Settings size={20} />, label: 'Settings', path: '/consumer/settings' },

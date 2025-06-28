@@ -71,13 +71,37 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   const audioRef = React.useRef<HTMLAudioElement | null>(null);
   
   const totalSteps = 4;
+
+  // Set initial values if user already has some preferences
+  useEffect(() => {
+    if (currentUser && currentUser.role === 'creator') {
+      if (currentUser.portalName) {
+        setPortalName(currentUser.portalName);
+      }
+      if (currentUser.niche) {
+        setSelectedNiche(currentUser.niche);
+      }
+      if (currentUser.services && currentUser.services.length > 0) {
+        setSelectedServices(currentUser.services);
+      }
+      if (currentUser.customizations.aiVoiceId) {
+        setSelectedVoice(currentUser.customizations.aiVoiceId);
+      }
+      if (currentUser.customizations.aiAvatar) {
+        const avatarId = avatarOptions.findIndex(a => a.src === currentUser.customizations.aiAvatar);
+        if (avatarId >= 0) {
+          setSelectedAvatar(avatarOptions[avatarId].id);
+        }
+      }
+    }
+  }, [currentUser]);
   
   // Handle next button click
   const handleNext = () => {
     if (step < totalSteps) {
       setStep(step + 1);
     } else {
-      // Final step completion
+      // Final step completion - show loading animation
       setIsGenerating(true);
       
       // Create a new customized user object with selected options
@@ -91,10 +115,12 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             aiVoiceId: selectedVoice,
             aiAvatar: selectedAvatar ? avatarOptions.find(a => a.id === selectedAvatar)?.src : undefined,
           },
-          // You could add more customizations here based on niche and services
           services: selectedServices,
           niche: selectedNiche,
+          onboardingCompleted: true
         };
+        
+        console.log("Saving setup wizard data:", updatedUser);
         
         // Update the user in the store
         setCurrentUser(updatedUser);
@@ -248,6 +274,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </p>
             </div>
             
+            {/* Niche Selection */}
             <div className="space-y-2 mt-6">
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 What's your niche? <span className="text-red-500">*</span>
@@ -261,13 +288,13 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                     className={`
                       p-4 rounded-xl cursor-pointer border-2 transition-all
                       ${selectedNiche === niche.id 
-                        ? 'border-primary bg-primary/5' 
+                        ? 'border-primary bg-primary/10' 
                         : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'}
                     `}
                     onClick={() => setSelectedNiche(niche.id)}
                   >
                     <div className="flex flex-col items-center text-center">
-                      <div className={`h-12 w-12 rounded-full ${selectedNiche === niche.id ? 'bg-primary/10' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center mb-3`}>
+                      <div className={`h-12 w-12 rounded-full ${selectedNiche === niche.id ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center mb-3`}>
                         <niche.icon className={`h-6 w-6 ${selectedNiche === niche.id ? 'text-primary' : niche.color}`} />
                       </div>
                       <span className="font-medium text-gray-900 dark:text-white">{niche.label}</span>
@@ -278,6 +305,22 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </div>
             </div>
             
+            {/* Validation Warning */}
+            {(!portalName || !selectedNiche) && (
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center mt-4">
+                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0" />
+                <p className="text-sm text-amber-800 dark:text-amber-300">
+                  {!portalName && !selectedNiche 
+                    ? 'Please enter a portal name and select your niche to continue'
+                    : !portalName 
+                      ? 'Please enter a portal name to continue'
+                      : 'Please select your niche to continue'
+                  }
+                </p>
+              </div>
+            )}
+            
+            {/* Help Text */}
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-6">
               <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
               <p className="text-sm text-blue-800 dark:text-blue-300">
@@ -302,26 +345,31 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </p>
             </div>
             
+            {/* Avatar Selection */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Select Avatar <span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-3 md:grid-cols-5 gap-4 mb-8">
+              <div className="grid grid-cols-3 gap-4 mb-8">
                 {avatarOptions.map((avatar) => (
                   <motion.div
                     key={avatar.id}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className={`relative cursor-pointer rounded-lg overflow-hidden ${
-                      selectedAvatar === avatar.id ? 'ring-2 ring-primary' : 'hover:ring-2 hover:ring-gray-300 dark:hover:ring-gray-600'
+                    className={`relative cursor-pointer rounded-lg overflow-hidden border ${
+                      selectedAvatar === avatar.id 
+                        ? 'border-primary ring-2 ring-primary' 
+                        : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
                     }`}
                     onClick={() => setSelectedAvatar(avatar.id)}
                   >
-                    <img 
-                      src={avatar.src} 
-                      alt="AI Avatar option" 
-                      className="w-full h-32 object-cover"
-                    />
+                    <div className="aspect-square">
+                      <img 
+                        src={avatar.src} 
+                        alt="AI Avatar option" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                     {selectedAvatar === avatar.id && (
                       <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">
                         <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center">
@@ -334,6 +382,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </div>
             </div>
             
+            {/* Voice Selection */}
             <div className="space-y-3">
               <div className="flex items-center justify-between">
                 <label htmlFor="voice-select" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -360,6 +409,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </select>
             </div>
             
+            {/* Welcome Message */}
             <div>
               <label htmlFor="welcome-message" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Welcome Message
@@ -368,7 +418,8 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                 id="welcome-message"
                 value={welcomeMessage}
                 onChange={(e) => setWelcomeMessage(e.target.value)}
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700 min-h-24"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white bg-white dark:bg-gray-700"
+                rows={3}
                 placeholder="Enter a welcome message for your AI assistant..."
               />
               <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
@@ -376,6 +427,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </p>
             </div>
             
+            {/* Voice Preview */}
             <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-800 rounded-lg">
               <div className="flex items-center justify-between mb-3">
                 <h4 className="text-sm font-medium text-gray-900 dark:text-white flex items-center">
@@ -400,20 +452,31 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   className="bg-primary h-full"
                   initial={{ width: 0 }}
                   animate={{ 
-                    width: isPlaying ? ['0%', '100%', '0%'] : '0%',
-                    transition: { duration: isPlaying ? 3 : 0, repeat: isPlaying ? Infinity : 0 }
+                    width: isPlaying ? ['0%', '100%'] : '0%',
+                    transition: { duration: isPlaying ? 3 : 0, repeat: 0 }
                   }}
                 />
               </div>
               <p className="mt-3 text-xs text-gray-500 dark:text-gray-400">
-                Preview: "{voiceOptions.find(v => v.id === selectedVoice)?.sampleText || welcomeMessage}"
+                Preview: "{voiceOptions.find(v => v.id === selectedVoice)?.name || ''} voice sample"
               </p>
             </div>
             
+            {/* Validation Warning */}
+            {!selectedAvatar && (
+              <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-center">
+                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mr-2 flex-shrink-0" />
+                <p className="text-sm text-amber-800 dark:text-amber-300">
+                  Please select an avatar to continue
+                </p>
+              </div>
+            )}
+            
+            {/* Help Text */}
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-4">
               <Mic className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
               <p className="text-sm text-blue-800 dark:text-blue-300">
-                Your AI assistant will use this voice to interact with your audience, making conversations more engaging and personal.
+                Your AI assistant will use this voice and avatar to interact with your audience, making conversations more engaging and personal.
               </p>
             </div>
           </motion.div>
@@ -443,13 +506,13 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   className={`
                     p-4 rounded-xl cursor-pointer border-2 transition-all
                     ${selectedServices.includes(service.id) 
-                      ? 'border-primary bg-primary/5' 
+                      ? 'border-primary bg-primary/10' 
                       : 'border-gray-200 dark:border-gray-700'}
                   `}
                   onClick={() => toggleService(service.id)}
                 >
                   <div className="flex items-center">
-                    <div className={`h-10 w-10 rounded-full ${selectedServices.includes(service.id) ? 'bg-primary/10' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center mr-4`}>
+                    <div className={`h-10 w-10 rounded-full ${selectedServices.includes(service.id) ? 'bg-primary/20' : 'bg-gray-100 dark:bg-gray-800'} flex items-center justify-center mr-4`}>
                       <service.icon className={`h-5 w-5 ${selectedServices.includes(service.id) ? 'text-primary' : 'text-gray-500 dark:text-gray-400'}`} />
                     </div>
                     <div>
@@ -474,15 +537,17 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               ))}
             </div>
             
+            {/* Validation Warning */}
             {selectedServices.length === 0 && (
               <div className="p-3 bg-amber-50 dark:bg-amber-900/20 rounded-lg flex items-start">
-                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 mr-2" />
+                <AlertCircle className="h-5 w-5 text-amber-600 dark:text-amber-400 mt-0.5 mr-2 flex-shrink-0" />
                 <p className="text-sm text-amber-800 dark:text-amber-300">
                   Please select at least one service to continue
                 </p>
               </div>
             )}
             
+            {/* Help Text */}
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg flex items-start mt-6">
               <Sparkles className="h-5 w-5 text-blue-600 dark:text-blue-400 mt-0.5 mr-2 flex-shrink-0" />
               <div>
@@ -512,7 +577,9 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
               </p>
             </div>
             
+            {/* Portal Preview */}
             <div className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+              {/* Header */}
               <div className="bg-primary/10 p-4 flex items-center border-b border-gray-200 dark:border-gray-700">
                 <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center mr-3">
                   <Bot className="h-4 w-4 text-primary" />
@@ -521,7 +588,10 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   {portalName || currentUser?.name + "'s Portal"}
                 </span>
               </div>
+              
+              {/* Content */}
               <div className="p-6 bg-white dark:bg-gray-800">
+                {/* Avatar and Name */}
                 <div className="flex items-center gap-4 mb-6">
                   <div className="h-20 w-20 rounded-full overflow-hidden border-4 border-primary/20">
                     {selectedAvatar ? (
@@ -546,14 +616,15 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   </div>
                 </div>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {/* Services Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                   {getSelectedServicesInfo().map((service) => (
                     <div 
                       key={service.id}
                       className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-gray-50 dark:bg-gray-700/30"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="h-10 w-10 rounded-full bg-primary/20 flex items-center justify-center">
                           <service.icon className="h-5 w-5 text-primary" />
                         </div>
                         <div>
@@ -569,7 +640,8 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                   ))}
                 </div>
                 
-                <div className="mt-4 border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-primary/5">
+                {/* AI Assistant Preview */}
+                <div className="border border-gray-200 dark:border-gray-700 rounded-lg p-4 bg-primary/5">
                   <div className="flex items-start gap-3">
                     <Bot className="h-6 w-6 text-primary mt-0.5" />
                     <div>
@@ -589,23 +661,32 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             </div>
             
             {/* Quick Metrics Preview */}
-            <div className="grid grid-cols-4 gap-4">
-              <div className="bg-primary/5 dark:bg-primary/10 rounded-lg p-3 text-center">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+              <div className="bg-primary/10 dark:bg-primary/20 rounded-lg p-3 text-center">
                 <div className="text-lg font-bold text-primary">24/7</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">Availability</div>
               </div>
-              <div className="bg-secondary/5 dark:bg-secondary/10 rounded-lg p-3 text-center">
+              <div className="bg-secondary/10 dark:bg-secondary/20 rounded-lg p-3 text-center">
                 <div className="text-lg font-bold text-secondary">100%</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">AI Powered</div>
               </div>
-              <div className="bg-accent/5 dark:bg-accent/10 rounded-lg p-3 text-center">
+              <div className="bg-accent/10 dark:bg-accent/20 rounded-lg p-3 text-center">
                 <div className="text-lg font-bold text-accent">5+ mins</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">Saved/Visit</div>
               </div>
-              <div className="bg-amber-500/5 dark:bg-amber-500/10 rounded-lg p-3 text-center">
+              <div className="bg-amber-500/10 dark:bg-amber-500/20 rounded-lg p-3 text-center">
                 <div className="text-lg font-bold text-amber-500">30%</div>
                 <div className="text-xs text-gray-600 dark:text-gray-400">Conv. Rate</div>
               </div>
+            </div>
+            
+            {/* Ready to Launch */}
+            <div className="text-center p-4 bg-green-50 dark:bg-green-900/20 rounded-lg">
+              <Check className="h-6 w-6 text-green-600 mx-auto mb-2" />
+              <h4 className="font-medium text-green-800 dark:text-green-300">Ready to Launch!</h4>
+              <p className="text-sm text-green-700 dark:text-green-400">
+                Click "Create Portal" below to finalize your setup
+              </p>
             </div>
           </motion.div>
         );
@@ -707,15 +788,17 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
   
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg overflow-hidden max-w-3xl w-full">
+      {/* Header */}
       <div className="p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h2 className="text-xl font-bold text-gray-900 dark:text-white flex items-center">
           <Rocket className="mr-2 h-5 w-5 text-primary" />
           Create Your AI-Powered Creator Portal
         </h2>
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={onSkip}
+          className="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
         >
           Skip
         </Button>
@@ -733,7 +816,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
                       ${index + 1 < step 
                         ? 'bg-primary text-white' 
                         : index + 1 === step
-                          ? 'bg-primary/10 text-primary border-2 border-primary'
+                          ? 'bg-primary/20 text-primary border-2 border-primary'
                           : 'bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-400'}
                     `}
                     onClick={() => {
@@ -763,7 +846,8 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
         </div>
       )}
       
-      <div className="p-6">
+      {/* Content */}
+      <div className="p-6 overflow-y-auto max-h-[60vh]">
         {isGenerating || portalReady ? (
           renderFinalStep()
         ) : (
@@ -775,6 +859,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
         )}
       </div>
       
+      {/* Footer */}
       {!isGenerating && !portalReady && (
         <div className="p-6 border-t border-gray-200 dark:border-gray-700 flex justify-between">
           <Button
@@ -782,6 +867,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleBack}
             leftIcon={<ChevronLeft size={16} />}
             disabled={step === 1}
+            className="bg-white dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-gray-300 dark:border-gray-600"
           >
             Back
           </Button>
@@ -790,6 +876,7 @@ export const SetupWizard: React.FC<SetupWizardProps> = ({ onComplete, onSkip }) 
             onClick={handleNext}
             rightIcon={<ChevronRight size={16} />}
             disabled={!isStepComplete()}
+            className="bg-primary hover:bg-primary-600 text-white"
           >
             {step === totalSteps ? 'Create Portal' : 'Next'}
           </Button>

@@ -38,7 +38,7 @@ export const ConsumerTopBar: React.FC = () => {
   };
 
   return (
-    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-10 shadow-md">
+    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-30 shadow-md">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -134,11 +134,11 @@ export const ConsumerTopBar: React.FC = () => {
                   <p className="text-xs text-gray-500 dark:text-gray-400">{currentUser?.email}</p>
                 </div>
                 <div className="py-1 mt-1">
-                  <Link to="/consumer/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center">
+                  <Link to="/consumer/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center block">
                     <User className="mr-2 h-4 w-4 text-gray-500" />
                     Profile
                   </Link>
-                  <Link to="/consumer/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center">
+                  <Link to="/consumer/settings" className="text-left w-full px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md flex items-center block">
                     <Settings className="mr-2 h-4 w-4 text-gray-500" />
                     Settings
                   </Link>

@@ -130,7 +130,7 @@ const PublicHeader: React.FC = () => {
                 {showUserMenu && (
                   <div 
                     ref={userMenuRef}
-                    className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-10 border border-gray-200 dark:border-gray-700 overflow-hidden"
+                    className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-lg shadow-lg z-50 border border-gray-200 dark:border-gray-700 overflow-hidden"
                   >
                     <div className="p-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700/50">
                       <p className="font-medium text-gray-900 dark:text-white text-sm">{currentUser.name}</p>

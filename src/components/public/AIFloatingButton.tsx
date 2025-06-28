@@ -55,7 +55,7 @@ export const AIFloatingButton: React.FC = () => {
   return (
     <>
       {/* Floating chat button */}
-      <div className="fixed bottom-6 right-6 z-30">
+      <div className="fixed bottom-6 right-6 z-40">
         <Button
           onClick={toggleChat}
           className="h-14 w-14 rounded-full shadow-lg bg-primary hover:bg-primary-600 text-white"
@@ -73,7 +73,7 @@ export const AIFloatingButton: React.FC = () => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 z-20 w-80 md:w-96 rounded-lg overflow-hidden shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex flex-col"
+            className="fixed bottom-24 right-6 z-30 w-80 md:w-96 rounded-lg overflow-hidden shadow-xl bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex flex-col"
             style={{ maxHeight: 'calc(100vh - 150px)' }}
           >
             {/* Chat header */}
@@ -110,7 +110,7 @@ export const AIFloatingButton: React.FC = () => {
                   className={`flex ${msg.senderType === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
                   <div 
-                    className={`rounded-lg p-3 max-w-[80%] ${
+                    className={`rounded-lg p-3 max-w-[80%] shadow-sm ${
                       msg.senderType === 'user' 
                         ? 'bg-primary text-white' 
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
@@ -125,7 +125,7 @@ export const AIFloatingButton: React.FC = () => {
               ))}
               {isAIProcessing && (
                 <div className="flex justify-start">
-                  <div className="rounded-lg p-3 bg-gray-100 dark:bg-gray-700">
+                  <div className="rounded-lg p-3 bg-gray-100 dark:bg-gray-700 shadow-sm">
                     <div className="flex space-x-1">
                       <div className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style={{ animationDelay: '0ms' }}></div>
                       <div className="w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500 animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -149,7 +149,7 @@ export const AIFloatingButton: React.FC = () => {
                 type="submit"
                 variant="primary"
                 size="icon"
-                className="ml-2 h-9 w-9"
+                className="ml-2 h-9 w-9 shadow-md"
                 disabled={message.trim() === '' || isAIProcessing}
               >
                 <Send size={16} />

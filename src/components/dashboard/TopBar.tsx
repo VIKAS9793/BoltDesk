@@ -40,7 +40,7 @@ export const TopBar: React.FC = () => {
   };
 
   return (
-    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-10 shadow-md">
+    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 flex items-center justify-between z-30 shadow-md">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"
@@ -125,7 +125,7 @@ export const TopBar: React.FC = () => {
                 />
               ) : (
                 <span className="text-xs font-medium">
-                  {currentUser?.name.substring(0, 2).toUpperCase() || 'VI'}
+                  {currentUser?.name?.substring(0, 2).toUpperCase() || 'VI'}
                 </span>
               )}
             </div>

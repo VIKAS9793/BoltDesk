@@ -90,6 +90,10 @@
     @apply bg-background text-foreground antialiased;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+  /* Reset button styles to avoid browser-specific differences */
+  button {
+    @apply outline-none focus:outline-none;
+  }
 }
 
 @layer utilities {

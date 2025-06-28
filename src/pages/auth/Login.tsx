@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAppStore } from '../../store';
 import { Button } from '../../components/ui/Button';
 import { Creator, Audience } from '../../types';
-import { Crown, Users, ArrowLeft } from 'lucide-react';
+import { Bot, Crown, Users, ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { handleSocialLogin } from '../../utils/api';
 import { useToast } from '../../hooks/useToast';
+import { motion, AnimatePresence } from 'framer-motion';
 
 type UserRole = 'creator' | 'consumer' | null;
 
@@ -13,22 +14,20 @@ export const Login: React.FC = () => {
   const [selectedRole, setSelectedRole] = useState<UserRole>(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   
   const navigate = useNavigate();
-  const { setCurrentUser, setAuthenticated, isAuthenticated, currentUser } = useAppStore();
+  const { setCurrentUser, setAuthenticated } = useAppStore();
   const { success, error: showError } = useToast();
-  
-  // Debug auth state
-  useEffect(() => {
-    console.log('Login Page - Auth State:', { isAuthenticated, currentUser });
-  }, [isAuthenticated, currentUser]);
   
   const handleRoleSelect = (role: UserRole) => {
     setSelectedRole(role);
     setError('');
+    setEmail('');
+    setPassword('');
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,7 +36,7 @@ export const Login: React.FC = () => {
     setIsLoading(true);
     
     try {
-      console.log(`Attempting to login as ${selectedRole} with email: ${email}`);
+      // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       if (selectedRole === 'creator' && email === 'creator@example.com' && password === 'password') {
@@ -50,9 +49,9 @@ export const Login: React.FC = () => {
           portalName: 'Vikas Creates',
           portalDescription: 'Your hub for creative content and community',
           customizations: {
-            primaryColor: '#1A73E8',
-            secondaryColor: '#9334E6',
-            accentColor: '#00A49A',
+            primaryColor: '#3B82F6',
+            secondaryColor: '#9333EA',
+            accentColor: '#14B8A6',
             aiAgentName: 'Vikas Assistant',
             darkMode: false
           },
@@ -77,13 +76,11 @@ export const Login: React.FC = () => {
           }
         };
         
-        console.log('Setting creator user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
-        success('Successfully logged in!');
-        
-        console.log('Navigating to /dashboard');
+        success('Successfully logged in as creator!');
         navigate('/dashboard');
+        
       } else if (selectedRole === 'consumer' && email === 'consumer@example.com' && password === 'password') {
         const mockUser: Audience = {
           id: '2',
@@ -95,19 +92,17 @@ export const Login: React.FC = () => {
           subscriptionTier: 'free'
         };
         
-        console.log('Setting consumer user:', mockUser);
         setCurrentUser(mockUser);
         setAuthenticated(true);
         success('Successfully logged in as consumer!');
-        
-        console.log('Navigating to /consumer');
         navigate('/consumer');
+        
       } else {
         setError(`Invalid credentials. Try ${selectedRole === 'creator' ? 'creator' : 'consumer'}@example.com / password`);
       }
     } catch (err) {
-      console.error('Login error:', err);
       setError('An error occurred during login. Please try again.');
+      console.error(err);
     } finally {
       setIsLoading(false);
     }
@@ -121,7 +116,6 @@ export const Login: React.FC = () => {
       
       if (result.success) {
         success(`Successfully connected with ${provider}!`);
-        // In a real app, you would handle the token and create user session
       } else {
         showError(result.error || `${provider} login failed`);
       }
@@ -134,93 +128,138 @@ export const Login: React.FC = () => {
   
   if (!selectedRole) {
     return (
-      <div className="text-center">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+      <motion.div 
+        className="text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.h2 
+          className="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2 }}
+        >
           Welcome to BoltDesk
-        </h2>
+        </motion.h2>
         
-        <p className="text-gray-700 dark:text-gray-300 mb-8">
+        <motion.p 
+          className="text-gray-600 dark:text-gray-400 mb-8"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+        >
           Choose how you want to sign in
-        </p>
+        </motion.p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-xl mx-auto">
-          <button
+          <motion.button
             onClick={() => handleRoleSelect('creator')}
-            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary hover:bg-primary/5 transition-all text-left shadow-md hover:shadow-lg group"
+            className="group p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-primary dark:hover:border-primary hover:bg-primary/5 transition-all text-left"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.4 }}
           >
-            <div className="h-12 w-12 rounded-full bg-primary-100 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors border border-primary/30">
-              <Crown className="h-6 w-6 text-primary-600" />
+            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+              <Crown className="h-6 w-6 text-primary" />
             </div>
             <h3 className="font-medium text-lg text-gray-900 dark:text-white mb-2">
               Sign in as Creator
             </h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Create and monetize content, manage your portal, and engage with your audience
             </p>
-          </button>
+          </motion.button>
           
-          <button
+          <motion.button
             onClick={() => handleRoleSelect('consumer')}
-            className="p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-secondary hover:bg-secondary/5 transition-all text-left shadow-md hover:shadow-lg group"
+            className="group p-6 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-secondary dark:hover:border-secondary hover:bg-secondary/5 transition-all text-left"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.5 }}
           >
-            <div className="h-12 w-12 rounded-full bg-secondary-100 flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors border border-secondary/30">
-              <Users className="h-6 w-6 text-secondary-600" />
+            <div className="h-12 w-12 rounded-full bg-secondary/10 flex items-center justify-center mb-4 group-hover:bg-secondary/20 transition-colors">
+              <Users className="h-6 w-6 text-secondary" />
             </div>
             <h3 className="font-medium text-lg text-gray-900 dark:text-white mb-2">
               Sign in as Consumer
             </h3>
-            <p className="text-sm text-gray-700 dark:text-gray-300">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
               Access premium content, interact with creators, and join communities
             </p>
-          </button>
+          </motion.button>
         </div>
-      </div>
+      </motion.div>
     );
   }
   
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, x: 20 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex items-center justify-between mb-6">
         <Button
-          variant="outline"
+          variant="ghost"
           size="sm"
-          className="text-gray-700 dark:text-gray-300 border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-sm"
+          className="text-gray-600 dark:text-gray-400"
           onClick={() => setSelectedRole(null)}
           leftIcon={<ArrowLeft size={16} />}
         >
           Back
         </Button>
-        <div className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
           {selectedRole === 'creator' ? (
             <>
-              <Crown size={16} className="text-primary-600" />
-              <span>Creator Login</span>
+              <Crown size={16} className="text-primary" />
+              Creator Login
             </>
           ) : (
             <>
-              <Users size={16} className="text-secondary-600" />
-              <span>Consumer Login</span>
+              <Users size={16} className="text-secondary" />
+              Consumer Login
             </>
           )}
         </div>
       </div>
       
-      <h2 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">
+      <motion.h2 
+        className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+      >
         {selectedRole === 'creator' 
           ? 'Log in to your Creator Portal' 
           : 'Log in to access content'
         }
-      </h2>
+      </motion.h2>
       
-      {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-300 p-4 rounded-lg mb-4 text-sm border border-red-200 dark:border-red-800 shadow-md">
-          {error}
-        </div>
-      )}
+      <AnimatePresence>
+        {error && (
+          <motion.div 
+            className="bg-destructive/10 text-destructive p-3 rounded-md mb-4 text-sm"
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+          >
+            {error}
+          </motion.div>
+        )}
+      </AnimatePresence>
       
       <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-800 dark:text-gray-300 mb-1">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <label htmlFor="email" className="form-label">
             Email
           </label>
           <input
@@ -229,32 +268,50 @@ export const Login: React.FC = () => {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
+            className="form-input"
             placeholder="your@email.com"
           />
-        </div>
+        </motion.div>
         
-        <div>
-          <div className="flex items-center justify-between mb-1">
-            <label htmlFor="password" className="block text-sm font-medium text-gray-800 dark:text-gray-300">
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <div className="flex items-center justify-between mb-2">
+            <label htmlFor="password" className="form-label mb-0">
               Password
             </label>
-            <a href="#" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+            <a href="#" className="text-sm text-primary hover:text-primary-600">
               Forgot password?
             </a>
           </div>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm text-gray-900 dark:text-white bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary"
-            placeholder="••••••••"
-          />
-        </div>
+          <div className="relative">
+            <input
+              id="password"
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="form-input pr-10"
+              placeholder="••••••••"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+        </motion.div>
         
-        <div className="flex items-center">
+        <motion.div 
+          className="flex items-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+        >
           <input
             id="remember-me"
             name="remember-me"
@@ -264,28 +321,36 @@ export const Login: React.FC = () => {
           <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 dark:text-gray-300">
             Remember me
           </label>
-        </div>
+        </motion.div>
         
-        <div>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
           <Button
             type="submit"
             variant="primary"
-            className="w-full font-medium text-base py-2.5"
+            fullWidth
             isLoading={isLoading}
-            elevation={3}
           >
             Sign in
           </Button>
-        </div>
+        </motion.div>
       </form>
       
-      <div className="mt-6">
+      <motion.div 
+        className="mt-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.7 }}
+      >
         <div className="relative">
           <div className="absolute inset-0 flex items-center">
             <div className="w-full border-t border-gray-300 dark:border-gray-600"></div>
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-400">
+            <span className="px-2 bg-white dark:bg-gray-800 text-gray-500 dark:text-gray-400">
               Or continue with
             </span>
           </div>
@@ -295,9 +360,9 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full border-gray-300 dark:border-gray-600 shadow-sm hover:border-gray-400"
             onClick={() => handleSocialLoginClick('google')}
             isLoading={socialLoading === 'google'}
+            className="h-10"
           >
             <span className="sr-only">Sign in with Google</span>
             <svg className="h-5 w-5" aria-hidden="true" viewBox="0 0 24 24">
@@ -323,9 +388,9 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full border-gray-300 dark:border-gray-600 shadow-sm hover:border-gray-400"
             onClick={() => handleSocialLoginClick('twitter')}
             isLoading={socialLoading === 'twitter'}
+            className="h-10"
           >
             <span className="sr-only">Sign in with Twitter</span>
             <svg className="h-5 w-5 text-[#1DA1F2]" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -336,9 +401,9 @@ export const Login: React.FC = () => {
           <Button
             type="button"
             variant="outline"
-            className="w-full border-gray-300 dark:border-gray-600 shadow-sm hover:border-gray-400"
             onClick={() => handleSocialLoginClick('github')}
             isLoading={socialLoading === 'github'}
+            className="h-10"
           >
             <span className="sr-only">Sign in with GitHub</span>
             <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -346,29 +411,44 @@ export const Login: React.FC = () => {
             </svg>
           </Button>
         </div>
-      </div>
+      </motion.div>
       
-      <div className="mt-6 text-center text-sm">
-        <p className="text-gray-700 dark:text-gray-300">
+      <motion.div 
+        className="mt-6 text-center text-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.8 }}
+      >
+        <p className="text-gray-600 dark:text-gray-400">
           Don't have an account?{' '}
-          <a href="#" className="text-primary-600 hover:text-primary-700 font-medium">
+          <a href="#" className="text-primary hover:text-primary-600 font-medium">
             Sign up
           </a>
         </p>
-      </div>
+      </motion.div>
       
       {/* Demo account info */}
-      <div className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg shadow-md border border-blue-200 dark:border-blue-800">
-        <p className="text-sm text-gray-800 dark:text-gray-200">
-          <span className="font-semibold">Demo credentials:</span>{' '}
+      <motion.div 
+        className="mt-6 text-center bg-blue-50 dark:bg-blue-900/20 p-4 rounded-lg"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.9 }}
+      >
+        <p className="text-sm text-gray-700 dark:text-gray-300">
+          <span className="font-medium">Demo credentials:</span>{' '}
           {selectedRole === 'creator' ? 'creator@example.com' : 'consumer@example.com'} / password
         </p>
-      </div>
+      </motion.div>
       
       {/* bolt.new reference */}
-      <div className="mt-4 text-center text-xs text-gray-600 dark:text-gray-400">
-        Built with <a href="https://bolt.new" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700 font-medium">bolt.new</a>
-      </div>
-    </div>
+      <motion.div 
+        className="mt-4 text-center text-xs text-gray-500 dark:text-gray-400"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+      >
+        Built with <a href="https://bolt.new" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary-600">bolt.new</a>
+      </motion.div>
+    </motion.div>
   );
 };

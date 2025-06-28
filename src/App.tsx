@@ -21,7 +21,6 @@ import { SettingsPage } from './pages/dashboard/SettingsPage';
 import LicensePage from './pages/public/LicensePage';
 import AboutPage from './pages/public/AboutPage';
 import HomePage from './pages/public/HomePage';
-import ContentDetails from './pages/public/ContentDetails';
 
 import { ConsumerDashboard } from './pages/consumer/ConsumerDashboard';
 import { ContentLibrary } from './pages/consumer/ContentLibrary';
@@ -29,27 +28,14 @@ import { Favorites } from './pages/consumer/Favorites';
 import { Subscriptions } from './pages/consumer/Subscriptions';
 import { ConsumerSettings } from './pages/consumer/ConsumerSettings';
 
-// New legal and support pages
-import TermsOfService from './pages/legal/TermsOfService';
-import PrivacyPolicy from './pages/legal/PrivacyPolicy';
-import FAQ from './pages/support/FAQ';
-
 function App() {
-  const { isDarkMode, isAuthenticated, currentUser } = useAppStore();
+  const { isDarkMode } = useAppStore();
   const { toasts, hideToast } = useToast();
   
   // Initialize dark mode from system preference
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
   }, [isDarkMode]);
-  
-  // Debug logging for app state
-  useEffect(() => {
-    console.log('=== App State ===');
-    console.log('isAuthenticated:', isAuthenticated);
-    console.log('currentUser:', currentUser);
-    console.log('=================');
-  }, [isAuthenticated, currentUser]);
   
   return (
     <BrowserRouter>
@@ -82,19 +68,11 @@ function App() {
         {/* Public Routes */}
         <Route element={<PublicPortalLayout />}>
           <Route path="/" element={<HomePage />} />
-          <Route path="/content/:id" element={<ContentDetails />} />
           <Route path="/license" element={<LicensePage />} />
           <Route path="/about" element={<AboutPage />} />
-          
-          {/* Legal Routes */}
-          <Route path="/legal/terms" element={<TermsOfService />} />
-          <Route path="/legal/privacy" element={<PrivacyPolicy />} />
-          
-          {/* Support Routes */}
-          <Route path="/support/faq" element={<FAQ />} />
         </Route>
         
-        {/* Root redirect */}
+        {/* Fallback redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
       

@@ -4,31 +4,34 @@ import { cn } from '../../lib/utils';
 
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hover?: boolean;
-  elevation?: 0 | 1 | 2 | 3 | 4 | 5;
+  variant?: 'default' | 'elevated' | 'outlined';
 }
 
 const Card = React.forwardRef<HTMLDivElement, CardProps>(
-  ({ className, hover = true, elevation = 1, ...props }, ref) => {
-    const elevationClass = elevation ? `elevation-${elevation}` : '';
-    
+  ({ className, hover = true, variant = 'default', children, ...props }, ref) => {
+    const baseClasses = "card";
+    const variantClasses = {
+      default: "",
+      elevated: "shadow-lg",
+      outlined: "border-2"
+    };
+
     return (
       <motion.div
         ref={ref}
-        className={cn(
-          "card",
-          elevationClass,
-          className
-        )}
+        className={cn(baseClasses, variantClasses[variant], className)}
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.3 }}
         whileHover={hover ? { 
-          scale: 1.01,
-          className: `elevation-${Math.min(5, elevation + 1)}`,
+          scale: 1.02,
+          boxShadow: "0 10px 30px -10px rgba(0,0,0,0.1)",
           transition: { type: "spring", stiffness: 300, damping: 20 }
         } : undefined}
         {...props}
-      />
+      >
+        {children}
+      </motion.div>
     );
   }
 );

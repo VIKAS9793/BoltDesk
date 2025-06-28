@@ -9,7 +9,7 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   isLoading?: boolean;
   leftIcon?: React.ReactNode;
   rightIcon?: React.ReactNode;
-  elevation?: 0 | 1 | 2 | 3 | 4 | 5;
+  fullWidth?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -20,24 +20,26 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     isLoading = false,
     leftIcon,
     rightIcon,
-    elevation = 2,
     disabled,
     children,
+    fullWidth = false,
     ...props
   }, ref) => {
-    const elevationClass = elevation ? `elevation-${elevation}` : '';
-    
+    const baseClass = 'btn';
+    const variantClass = `btn-${variant}`;
+    const sizeClass = `btn-${size}`;
+
     return (
       <motion.button
-        whileHover={!disabled && !isLoading ? { scale: 1.02 } : undefined}
-        whileTap={!disabled && !isLoading ? { scale: 0.98 } : undefined}
+        whileHover={{ scale: disabled || isLoading ? 1 : 1.02 }}
+        whileTap={{ scale: disabled || isLoading ? 1 : 0.98 }}
         transition={{ type: "spring", stiffness: 400, damping: 17 }}
         className={cn(
-          'btn',
-          `btn-${variant}`,
-          `btn-${size}`,
-          elevationClass,
-          isLoading && 'opacity-70 pointer-events-none',
+          baseClass,
+          variantClass,
+          sizeClass,
+          fullWidth && 'w-full',
+          (isLoading || disabled) && 'opacity-70 pointer-events-none',
           className
         )}
         disabled={isLoading || disabled}
@@ -45,20 +47,39 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         {...props}
       >
         {isLoading && (
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+          <motion.span
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="mr-2"
+          >
+            <Loader2 className="h-4 w-4 animate-spin" />
+          </motion.span>
         )}
         {!isLoading && leftIcon && (
-          <span className="mr-2">
+          <motion.span 
+            initial={{ x: -5, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="mr-2 flex-shrink-0"
+          >
             {leftIcon}
-          </span>
+          </motion.span>
         )}
-        <span>
+        <motion.span
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="flex-1 text-center"
+        >
           {children}
-        </span>
+        </motion.span>
         {!isLoading && rightIcon && (
-          <span className="ml-2">
+          <motion.span 
+            initial={{ x: 5, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            className="ml-2 flex-shrink-0"
+          >
             {rightIcon}
-          </span>
+          </motion.span>
         )}
       </motion.button>
     );

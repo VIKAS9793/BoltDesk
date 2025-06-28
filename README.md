@@ -2,7 +2,7 @@
 
 BoltDesk is an innovative platform that bridges the gap between content creators and their audiences through the power of AI. It provides a centralized hub for creators to share knowledge, monetize content, and engage with their audience while giving consumers easy access to premium resources with AI-assisted discovery.
 
-![BoltDesk Screenshot](https://i.imgur.com/XsxfYzW.png)
+![BoltDesk Screenshot](./assets/boltdesk-hero.png)
 
 ## 🔗 Live Demo
 

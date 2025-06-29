@@ -134,11 +134,6 @@ export const HomePage: React.FC = () => {
     navigate(`/content/${contentId}`);
   };
 
-  // Function to open YouTube video in new tab
-  const openYouTubeVideo = () => {
-    window.open('https://youtu.be/je9FwLgG9sc?si=XyDhT3lF-JlqDe_j', '_blank');
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero section with Google-style colors and elevation */}
@@ -173,7 +168,7 @@ export const HomePage: React.FC = () => {
                 size="lg"
                 className="bg-white text-primary-600 hover:bg-gray-100 h-14 px-8 text-base font-medium elevation-4"
                 leftIcon={<Sparkles size={18} />}
-                onClick={openYouTubeVideo}
+                onClick={() => setVideoModalOpen(true)}
               >
                 See How It Works
               </Button>
@@ -714,13 +709,17 @@ export const HomePage: React.FC = () => {
                 <X className="h-5 w-5" />
               </Button>
             </div>
-            <div className="aspect-video bg-gray-900 rounded-b-lg">
-              <div className="h-full flex items-center justify-center text-white">
-                <div className="text-center">
-                  <Play className="h-16 w-16 mx-auto mb-4 text-white" />
-                  <p className="text-lg">Demo video coming soon!</p>
-                </div>
-              </div>
+            <div className="aspect-video w-full bg-black">
+              <iframe
+                width="100%"
+                height="100%"
+                src="https://www.youtube.com/embed/je9FwLgG9sc?si=XyDhT3lF-JlqDe_j"
+                title="BoltDesk Demo Video"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              ></iframe>
             </div>
           </div>
         </div>

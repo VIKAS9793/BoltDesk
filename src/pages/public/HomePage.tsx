@@ -134,6 +134,11 @@ export const HomePage: React.FC = () => {
     navigate(`/content/${contentId}`);
   };
 
+  // Function to open YouTube video in new tab
+  const openYouTubeVideo = () => {
+    window.open('https://youtu.be/je9FwLgG9sc?si=XyDhT3lF-JlqDe_j', '_blank');
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Hero section with Google-style colors and elevation */}
@@ -168,7 +173,7 @@ export const HomePage: React.FC = () => {
                 size="lg"
                 className="bg-white text-primary-600 hover:bg-gray-100 h-14 px-8 text-base font-medium elevation-4"
                 leftIcon={<Sparkles size={18} />}
-                onClick={() => setVideoModalOpen(true)}
+                onClick={openYouTubeVideo}
               >
                 See How It Works
               </Button>
